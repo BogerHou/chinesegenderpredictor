@@ -5,6 +5,12 @@
   "outputDirectory": "dist",
   "cleanUrls": true,
   "trailingSlash": true,
+  "redirects": [{
+    "source": "/:path*",
+    "has": [{"type": "host", "value": "chinesegenderpredictor\\.vercel\\.app"}],
+    "destination": "https://chinesegenderpredictor.net/:path*",
+    "permanent": true
+  }],
   "headers": [{"source":"/(.*)","headers":[
     {"key":"X-Content-Type-Options","value":"nosniff"},
     {"key":"Referrer-Policy","value":"strict-origin-when-cross-origin"},
