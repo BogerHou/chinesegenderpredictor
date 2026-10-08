@@ -7,3 +7,7 @@ node_modules/
 .qa/
 dist/
 .vercel/
+
+# Local research evidence, kept out of the public repository
+chinesegenderpredictor.net-audit/
+tmp/

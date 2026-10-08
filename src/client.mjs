@@ -1,23 +1,26 @@
+import {loadCalendar} from './calculator-loader.mjs';
 const menu=document.querySelector('.menu-toggle');menu?.addEventListener('click',()=>{const open=menu.getAttribute('aria-expanded')==='true';menu.setAttribute('aria-expanded',String(!open));menu.setAttribute('aria-label',open?'Open navigation':'Close navigation');document.querySelector('#mobile-nav').hidden=open;});
 document.addEventListener('keydown',event=>{if(event.key==='Escape'&&menu){menu.setAttribute('aria-expanded','false');document.querySelector('#mobile-nav').hidden=true;menu.setAttribute('aria-label','Open navigation');}});
 document.querySelectorAll('[data-print]').forEach(el=>el.addEventListener('click',()=>window.print()));
 const form=document.querySelector('#predictor-form, #age-form');
 let predict,lunarAge;
-if(form)({predict,lunarAge}=await import('./calendar.mjs'));
+let calendarReady=false;
+let loadingStatus;
 const result=document.querySelector('#result-content');
 const panel=document.querySelector('#result-panel');
 const originalResult=result?.innerHTML;
 function niceDate(value){return new Intl.DateTimeFormat('en-US',{year:'numeric',month:'short',day:'numeric',timeZone:'UTC'}).format(new Date(value+'T12:00:00Z'));}
-function clearResult(){if(result){result.innerHTML=originalResult;panel.classList.remove('has-result');delete panel.dataset.prediction;}document.querySelectorAll('.gender-chart .selected').forEach(td=>{td.classList.remove('selected');td.removeAttribute('aria-label');});const error=document.querySelector('#form-error');if(error)error.hidden=true;form?.querySelectorAll('[aria-invalid]').forEach(el=>el.removeAttribute('aria-invalid'));}
+function clearResult(){if(result){result.innerHTML=originalResult;panel.classList.remove('has-result');delete panel.dataset.prediction;}document.querySelectorAll('.gender-chart .selected').forEach(td=>{td.classList.remove('selected');td.removeAttribute('aria-label');});const error=document.querySelector('#form-error');if(error)error.hidden=true;form?.querySelectorAll('[aria-invalid]').forEach(el=>{el.removeAttribute('aria-invalid');el.setAttribute('aria-describedby',el.getAttribute('aria-describedby').replace(' form-error',''));});}
 document.querySelectorAll('[name="date-mode"]').forEach(input=>input.addEventListener('change',()=>{clearResult();const due=input.value==='due';document.querySelector('#target-label').textContent=due?'Due date':'Conception date';document.querySelector('#target-hint').textContent=due?'We estimate conception from this date.':'Your best estimate is fine.';document.querySelector('#target-date').value='';}));
 form?.querySelectorAll('input[type="date"]').forEach(input=>input.addEventListener('input',clearResult));
 document.querySelector('[data-example]')?.addEventListener('click',()=>{clearResult();document.querySelector('#birth-date').value='1995-06-15';const due=document.querySelector('[name="date-mode"]:checked')?.value==='due';document.querySelector('#target-date').value=due?'2027-01-22':'2026-05-01';form.requestSubmit();});
 form?.addEventListener('submit',event=>{
   event.preventDefault();clearResult();
+  if(!calendarReady){loadingStatus?.focus();return;}
   const error=document.querySelector('#form-error');
   const birth=document.querySelector('#birth-date'),target=document.querySelector('#target-date');
   const empty=[birth,target].find(el=>!el.value);
-  if(empty){error.textContent='Please enter both dates to continue.';error.hidden=false;empty.setAttribute('aria-invalid','true');empty.focus();return;}
+  if(empty){error.textContent='Please enter both dates to continue.';error.hidden=false;empty.setAttribute('aria-invalid','true');empty.setAttribute('aria-describedby',empty.getAttribute('aria-describedby')+' form-error');empty.focus();return;}
   try{
     if(form.id==='age-form'){
       const r=lunarAge(birth.value,target.value);
@@ -39,7 +42,29 @@ form?.addEventListener('submit',event=>{
     panel.classList.add('has-result');
     document.querySelector('[data-reset]').addEventListener('click',()=>{form.reset();if(form.id==='predictor-form'){document.querySelector('#target-label').textContent='Conception date';document.querySelector('#target-hint').textContent='Your best estimate is fine.';}clearResult();birth.focus();});
     if(matchMedia('(max-width: 767px)').matches)panel.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth',block:'start'});
-  }catch(e){error.textContent=e.message;error.hidden=false;target.setAttribute('aria-invalid','true');target.focus();}
+  }catch(e){error.textContent=e.message;error.hidden=false;const field=e.field==='birth'?birth:e.field==='target'?target:null;if(field){field.setAttribute('aria-invalid','true');field.setAttribute('aria-describedby',field.getAttribute('aria-describedby')+' form-error');field.focus();}else{error.tabIndex=-1;error.focus();}}
 });
-// Enable only once local handling is installed; prevent no-JS form submission.
-form?.querySelector('[type="submit"]')?.removeAttribute('disabled');
+// Install local handling before loading the calendar; dates never leave the page.
+if(form){
+  const submit=form.querySelector('[type="submit"]');
+  const example=form.querySelector('[data-example]');
+  if(example)example.disabled=true;
+  loadingStatus=document.createElement('div');
+  loadingStatus.id='calculator-status';loadingStatus.className='field-hint';loadingStatus.tabIndex=-1;
+  loadingStatus.setAttribute('role','status');loadingStatus.setAttribute('aria-live','polite');
+  loadingStatus.textContent='Loading the lunar calendar…';
+  form.querySelector('#form-error').before(loadingStatus);
+  void loadCalendar({
+    load:()=>import('./calendar.mjs'),
+    onReady:calendar=>{
+      ({predict,lunarAge}=calendar);calendarReady=true;loadingStatus.hidden=true;
+      submit.removeAttribute('disabled');if(example)example.disabled=false;
+    },
+    onFailure:()=>{
+      loadingStatus.className='form-error';
+      loadingStatus.textContent='The lunar calendar could not load. Check your connection, then reload the calculator. Your dates have not been sent anywhere. ';
+      const retry=document.createElement('button');retry.type='button';retry.className='text-button';retry.textContent='Reload calculator';
+      retry.addEventListener('click',()=>window.location.reload());loadingStatus.append(retry);
+    }
+  });
+}

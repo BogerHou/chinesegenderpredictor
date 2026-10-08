@@ -12,15 +12,19 @@ npm run dev
 预览地址：`http://127.0.0.1:4321/`。静态预览不自动热更新，修改后运行 `npm run build` 并刷新页面。`PORT` 可覆盖端口。
 
 ```bash
-npm test
-npm run build
-npm run check
+npm run build:verified
+
+# 模拟正式部署及索引策略
+SITE_URL=https://chinesegenderpredictor.net VERCEL_ENV=production npm run build:verified
+
+# 发布后检查真实 HTTP 响应
+npm run verify:live
 ```
 
 ## 部署到 Vercel
 
 - Framework Preset：**Other**。
-- Build Command：`npm run build`。
+- Build Command：`npm run build:verified`，依次执行测试、构建和静态检查。
 - Output Directory：`dist`。
 - Install Command：默认 `npm install`，仓库已包含锁文件。
 - Node.js：22 LTS。
@@ -28,7 +32,7 @@ npm run check
 
 上线正式域名前，在 Vercel **Production** 环境设置 `SITE_URL` 为你实际拥有的 HTTPS 主域名，`https://chinesegenderpredictor.net`。不要填写竞品域名。重新部署后检查 canonical、robots 和 sitemap。不要把 `.env.example` 的示例当真实域名。
 
-未配置 `SITE_URL` 的构建会主动输出 `noindex,nofollow` 和禁止抓取的 robots，不生成 sitemap；正式环境配置后才打开索引。Vercel Preview 即使继承域名仍保持 noindex。此行为是为了避免测试站抢先收录。脚本不自行加载 `.env`；本地可通过 shell 环境变量或 `node --env-file=.env scripts/build.mjs` 验证正式构建。
+普通本地构建未配置 `SITE_URL` 时会主动输出 `noindex,nofollow` 和禁止抓取的 robots，不生成 sitemap；正式环境配置后才打开索引。正式部署的检查还会拒绝缺少 `SITE_URL` 的生产环境。Vercel Preview 即使继承域名仍保持 noindex。GitHub workflow 检查正式与预览两种策略；远程发布仍需查看实际任务结果。此行为是为了避免测试站抢先收录。脚本不自行加载 `.env`；本地可通过 shell 环境变量或 `node --env-file=.env scripts/build.mjs` 验证正式构建。
 
 部署架构：Spaceship 注册，Cloudflare DNS，Vercel 托管，GitHub 保存代码。发布状态见 [部署记录](DEPLOYMENT.md)。用户要求只使用自有域名；Vercel Domains 仅保留根域和 www（308 跳转至根域），不要重新添加默认 `.vercel.app` 项目域名。
 
@@ -36,9 +40,10 @@ npm run check
 
 | 路由 | 用途 |
 |---|---|
-| `/` | 唯一主预测器，覆盖 predictor / calendar / chart |
+| `/` | 唯一主预测器，覆盖 predictor / calendar / chart / birth chart |
 | `/lunar-age-calculator/` | 独立农历年龄计算器 |
-| `/chinese-gender-calendar-2027/` | 2027 公历农历月份对照与打印 |
+| `/chinese-gender-calendar-2026/`、`/chinese-gender-calendar-2027/` | 各年月份对照、完整图表和 A4／Letter PDF |
+| `/gender-reveal-games/` | 三种可打印小游戏、预览与 A4／Letter PDF |
 | `/how-it-works/` | 公式、实例、矩阵来源和闰月约定 |
 | `/accuracy/` | 原始研究与准确性说明 |
 | `/about/`、`/privacy/`、`/terms/` | 网站说明、隐私与使用边界 |
@@ -51,9 +56,12 @@ npm run check
 - `src/pages.mjs`：方法、证据、年度对照与支持页面。
 - `src/calendar.mjs`：严格日期校验、农历转换、虚岁与结果。
 - `src/chart.mjs`：固定版本的传统矩阵；不是统一官方原本。
-- `src/client.mjs`：交互，农历模块只在计算器页面按需加载。
-- `scripts/build.mjs`：预渲染8页、打包、robots/sitemap/canonical。
-- `tests/calendar.test.mjs`：香港天文台日期夹具及边界用例。
+- `src/client.mjs`：交互、字段错误定位；农历模块只在计算器页面按需加载。
+- `src/calculator-loader.mjs`：模块失败或 15 秒超时的恢复处理；保持按钮禁用并显示重载入口。
+- `scripts/build.mjs`：预渲染10页、打包、robots/sitemap/canonical。
+- `scripts/check.mjs`：元数据、链接、唯一 ID、索引策略和无脚本表单保护检查。
+- `scripts/verify-live.mjs`：生产 HTTP、跳转、资源和 PDF 检查。
+- `tests/calendar.test.mjs`、`tests/calculator-loader.test.mjs`：香港天文台日期夹具、输入边界与加载恢复；本轮共17项测试。
 
 虚岁 = 受孕农历年 − 出生农历年 + 1。预产期模式减266天得到估算受孕日。闰月使用同编号月份并明确提示，此为本站约定。图表支持虚岁18至45，不对超范围年龄做钳制。完整MIT和字体许可保存在 `THIRD-PARTY-NOTICES.md`，同时随网站发布文本副本。
 
@@ -63,12 +71,22 @@ npm run check
 
 原始月亮静物图为本项目生成，现已改为奶油白婴儿房背景、粉色圆球与浅蓝装饰，交付使用67 KB压缩JPEG。所有字体、图标、图片本地托管。无GA4/AdSense或第三方追踪脚本，后续接入前更新隐私文本；事件不得携带日期或出生相关信息。
 
-## 上线前的实际配置
+## 发布与运营配置
 
 1. 确认域名并设置 `SITE_URL`，核验正式页面可索引。
 2. 将项目连接实际 Vercel 账号；最终发布后用真实站点检查安全头及404。
 3. 使用真实运营者身份与联系渠道完善 About/Privacy，不填虚构医生或审核身份。
-4. 验证 Search Console 域名并提交 `/sitemap.xml`。GA4、广告账号在需要时单独配置。
+4. Search Console 域名所有权已于2026-10-09验证；本轮生产发布后提交 HTTPS `/sitemap.xml` 并检查回执。GA4、广告账号尚未配置。
 5. 如接广告，先设计不遮挡计算器的广告位并更新实际数据政策。
 
 浏览器功能与静态输出验收记录见 [QA](QA.md)。
+
+## 重新生成打印资料
+
+常规网站构建使用已保存的 PDF 和图片，不依赖 Python。更新资料时，安装 Python 的 `reportlab`、`Pillow` 及 Poppler `pdftoppm` 后执行：
+
+```bash
+python3 scripts/generate-printables.py
+```
+
+`NODE` 和 `PDFTOPPM` 可指定工具路径。生成器读取同一 `src/chart.mjs` 与 `src/calendar.mjs`，输出6份PDF、4张页面预览和分享图片。修改后必须重新核对图表及日历数据，并逐页渲染验收14页；不要只凭生成成功判断布局正确。

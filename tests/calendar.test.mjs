@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {
   addDays,
+  CalendarInputError,
   calendarMonths,
   dateString,
   lunarAge,
@@ -152,6 +153,22 @@ test('strict input validation rejects impossible, incomplete, and unsupported da
   }
   assert.throws(() => predict('1995-06-01', '2025-02-29'), /valid calendar date/);
   assert.throws(() => predict('1995-06-01', '2025-02-28', 'unknown'), /Choose conception date or due date/);
+});
+
+test('invalid dates identify the input to focus instead of blaming every error on the target date', () => {
+  const cases = [
+    [() => predict('1800-01-01', '2026-05-01'), 'birth', /between 1900 and 2099/],
+    [() => predict('1995-06-15', '2026-02-30'), 'target', /valid calendar date/],
+    [() => predict('1995-06-15', '1800-01-01', 'due'), 'target', /between 1900 and 2099/],
+    [() => predict('1900-01-01', '1900-02-01', 'due'), 'target', /estimated conception date is before 1900/],
+    [() => predict('2026-06-01', '2026-05-01'), 'birth', /birth date must be before/],
+    [() => predict('2009-06-01', '2025-03-29'), 'birth', /lunar age is 17/],
+    [() => lunarAge('1800-01-01', '2026-05-01'), 'birth', /between 1900 and 2099/],
+    [() => lunarAge('1995-06-15', '2100-01-01'), 'target', /between 1900 and 2099/],
+  ];
+  for (const [run, field, message] of cases) {
+    assert.throws(run, error => error instanceof CalendarInputError && error.field === field && message.test(error.message));
+  }
 });
 
 test('day arithmetic remains calendar-based across daylight-saving transitions', () => {

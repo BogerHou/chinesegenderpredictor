@@ -1,8 +1,21 @@
-# 首版验收记录
+# 站点验收记录
 
-日期：2026-10-08。环境：Node.js 22.22.3、本地静态服务器、Chromium 浏览器及 Vercel 生产部署。正式域名已正常发布；DNS / HTTPS 状态见 [部署记录](DEPLOYMENT.md)。
+更新日期：2026-10-09（Asia/Shanghai）。首版已上线，本轮改进已完成本地验收，新的生产部署回执待补充；DNS / HTTPS 状态见 [部署记录](DEPLOYMENT.md)。
 
-## 自动检查
+## 2026-10-09 改进版本地验收
+
+- `npm test`：17 项通过。保留首版 12 项日历测试，新增字段归属与日历模块成功、失败、超时、缺失导出的回归检查。
+- 正式构建：10 页、416 个内部链接／资源检查通过；新增 canonical、robots、sitemap、唯一元素 ID／描述和 404 noindex 检查。
+- 生日输入 `1800-01-01`：错误现在聚焦生日字段，生日带 `aria-invalid` 和错误说明关联，目标日期不再被错误标记。
+- 阻止日历模块下载时：出现可读取的失败说明及 Reload calculator 按钮；恢复网络并重载后，示例得到 Boy / 虚岁 32 / 农历三月，恢复路径有效。
+- 6 份 A4／US Letter PDF 共 14 页已逐页渲染检查；4 份年度 PDF 的 336 个图表格分别核对，2026／2027 全部月界与香港天文台资料核对。未测试实体打印机。
+- 新版手机 390×844 视口：首页、年度页和游戏页的内容宽与 scrollWidth 均为 375 CSS px，无页面横向溢出；首页提交按钮 top 735／bottom 784，较旧版约 top 827 上移。农历年龄示例 2000-06-01 → 2026-02-17 实测得到 27。
+- Vercel 配置现要求 `npm run build:verified`，先测试、再构建及检查；新增 GitHub workflow 另验 preview noindex。实际远程任务结果在发布后记录。
+- Search Console 域名所有权于 00:11 在当前个人账号验证成功；本轮 sitemap 提交和索引结果尚待生产部署后核查。
+
+以下首版记录保留当时的 8 页、12 项测试和 226 个内部路径结果，不代表改进版生产验收。
+
+## 2026-10-08 首版自动检查
 
 - `npm test`：12 项通过。覆盖官方农历日期、春节年龄边界、春节前出生、日期顺序、预产期减 266 天、图表数据、闰月、18/45 岁边界、2099 年末、无效日期、跨夏令时日期和 2027 全年月份区间。
 - `npm run build`：生成 8 个页面、独立 404、静态资源与 robots。
@@ -45,7 +58,9 @@
 
 ## 仍需正式环境验证
 
-Cloudflare 迁移后的 DNSSEC、搜索引擎收录和 Search Console 尚待完成。已尝试官方 PSI 移动端测量，返回 HTTP 429 RESOURCE_EXHAUSTED（匿名每日配额不可用），未获得 Lighthouse 报告；没有线上 Core Web Vitals 数据，不提供性能分数或达标承诺。
+Cloudflare 迁移后的 DNSSEC、本轮生产版本、sitemap 提交及搜索引擎收录尚待验证。Search Console 所有权现已验证。
+
+2026-10-08 23:43 的[官方 PageSpeed Insights 报告](https://pagespeed.web.dev/analysis/https-chinesegenderpredictor-net/d2vifh7syr?form_factor=mobile)已成功取得：首页移动端 Performance 99，Accessibility／Best Practices／SEO 均 100；LCP 1.9s、FCP 1.2s、TBT 20ms、CLS 0.001，桌面四项均 100。此前匿名 API 的 429 不是最终测量状态。该报告是本轮改动前首页的实验室测量；CrUX 无数据，不能据此宣称全站真实用户 Core Web Vitals 达标或搜索排名。
 
 没有对搜索量、关键词难度或收益做独立数值验证；研究结论与来源边界见 [竞品核验](COMPETITOR-ANALYSIS.md)。About 已关联实际维护者 BogerHou 的 GitHub 和项目 Issues，并提醒不要公开个人日期信息。
 
@@ -63,5 +78,5 @@ Cloudflare 迁移后的 DNSSEC、搜索引擎收录和 Search Console 尚待完�
 - 男孩结果使用淡蓝背景，女孩结果使用淡粉背景；实测两种结果和重置均正常，控制台无 error。
 - 手机390×844视口下页面无横向溢出（内容宽和scrollWidth均375 CSS px，剩余为滚动条）；移动导航正常。桌面及手机截图已替换为新版本。
 - 独立核算的正文、辅助文字、链接、按钮、图表文字对比度通过4.5:1；表单边界通过3:1。修复粉底链接4.46:1不足和空结果文字透明度导致的3.68:1不足。
-- 根域已通过16项线上HTTP检查；刷新Google及Cloudflare公共缓存后，两者根域A均为216.198.79.1、NS为Spaceship、DS无记录且无SERVFAIL。
+- 根域已通过16项线上HTTP检查；公共 DoH 返回根域 A 为216.198.79.1、NS 为 Spaceship，网站无 SERVFAIL。虽然部分查询未返回 DS，23:43 审查仍观察到一个 Google 缓存节点保留旧 DS、TTL 18750 秒；不能宣称全网旧 DS 已清空。
 - 已在 Vercel Domains 移除默认项目域名 `chinesegenderpredictor.vercel.app`，仅保留自有根域和 www。同步移除多余的应用重定向配置。
