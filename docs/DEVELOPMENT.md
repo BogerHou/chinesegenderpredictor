@@ -76,7 +76,7 @@ npm run verify:live
 1. 确认域名并设置 `SITE_URL`，核验正式页面可索引。
 2. 将项目连接实际 Vercel 账号；最终发布后用真实站点检查安全头及404。
 3. 使用真实运营者身份与联系渠道完善 About/Privacy，不填虚构医生或审核身份。
-4. Search Console 域名所有权已于2026-10-09验证；本轮生产发布后提交 HTTPS `/sitemap.xml` 并检查回执。GA4、广告账号尚未配置。
+4. Search Console 域名所有权已于2026-10-09验证；HTTPS `/sitemap.xml` 已读取成功，发现10个网址。用户选择先只用 Search Console，未接入 GA4 或行为统计；广告账号尚未配置。
 5. 如接广告，先设计不遮挡计算器的广告位并更新实际数据政策。
 
 浏览器功能与静态输出验收记录见 [QA](QA.md)。
@@ -89,4 +89,4 @@ npm run verify:live
 python3 scripts/generate-printables.py
 ```
 
-`NODE` 和 `PDFTOPPM` 可指定工具路径。生成器读取同一 `src/chart.mjs` 与 `src/calendar.mjs`，输出6份PDF、4张页面预览和分享图片。修改后必须重新核对图表及日历数据，并逐页渲染验收14页；不要只凭生成成功判断布局正确。
+`NODE` 和 `PDFTOPPM` 可指定工具路径。生成器读取同一 `src/chart.mjs` 与 `src/calendar.mjs`，输出6份PDF、3张页面预览和1张分享图片。修改后必须重新核对图表及日历数据，并逐页渲染验收14页；不要只凭生成成功判断布局正确。
