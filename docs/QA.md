@@ -1,6 +1,6 @@
 # 首版验收记录
 
-日期：2026-10-08。环境：Node.js 22.22.3、本地静态服务器、Chromium 浏览器及 Vercel 生产部署。Vercel 别名已经发布；正式域名 DNS / HTTPS 状态见 [部署记录](DEPLOYMENT.md)。
+日期：2026-10-08。环境：Node.js 22.22.3、本地静态服务器、Chromium 浏览器及 Vercel 生产部署。正式域名已正常发布；DNS / HTTPS 状态见 [部署记录](DEPLOYMENT.md)。
 
 ## 自动检查
 
@@ -39,13 +39,13 @@
 
 ## Vercel 线上验收
 
-- `https://chinesegenderpredictor.vercel.app` 的 14 项 HTTP 检查通过，覆盖 8 个页面、canonical、索引指令、JSON-LD、robots、8 URL sitemap、9 个静态资源、真实 404 及安全响应头。
+- `https://chinesegenderpredictor.net` 的 16 项 HTTP 检查通过，覆盖 8 个页面、canonical、索引指令、JSON-LD、robots、8 URL sitemap、静态资源、真实 404、安全响应头及 HTTP / www 跳转。
 - Chrome 线上示例计算返回 Boy / 虚岁 32 / 农历三月十五；重置正常；未出现控制台 error。
-- www HTTPS 已返回 308 至根域；Vercel 根域和 www 均已显示 Valid Configuration。正式根域的本机访问仍失败，不同解析器的旧 DNSSEC 缓存和完整 HTTPS 链仍需复验。
+- www HTTPS 返回 308 至根域；Vercel 根域和 www 均显示 Valid Configuration，正式根域浏览器访问正常，SSL 有效。默认 `.vercel.app` 项目域名已按用户最新要求移除。
 
 ## 仍需正式环境验证
 
-根域 HTTPS、完整重定向链、Cloudflare 迁移后的 DNSSEC、搜索引擎收录和 Search Console 尚待完成。已尝试官方 PSI 移动端测量，返回 HTTP 429 RESOURCE_EXHAUSTED（匿名每日配额不可用），未获得 Lighthouse 报告；没有线上 Core Web Vitals 数据，不提供性能分数或达标承诺。
+Cloudflare 迁移后的 DNSSEC、搜索引擎收录和 Search Console 尚待完成。已尝试官方 PSI 移动端测量，返回 HTTP 429 RESOURCE_EXHAUSTED（匿名每日配额不可用），未获得 Lighthouse 报告；没有线上 Core Web Vitals 数据，不提供性能分数或达标承诺。
 
 没有对搜索量、关键词难度或收益做独立数值验证；研究结论与来源边界见 [竞品核验](COMPETITOR-ANALYSIS.md)。About 已关联实际维护者 BogerHou 的 GitHub 和项目 Issues，并提醒不要公开个人日期信息。
 
@@ -64,4 +64,4 @@
 - 手机390×844视口下页面无横向溢出（内容宽和scrollWidth均375 CSS px，剩余为滚动条）；移动导航正常。桌面及手机截图已替换为新版本。
 - 独立核算的正文、辅助文字、链接、按钮、图表文字对比度通过4.5:1；表单边界通过3:1。修复粉底链接4.46:1不足和空结果文字透明度导致的3.68:1不足。
 - 根域已通过16项线上HTTP检查；刷新Google及Cloudflare公共缓存后，两者根域A均为216.198.79.1、NS为Spaceship、DS无记录且无SERVFAIL。
-- `vercel.json` 增加精确生产主机308跳转至正式域名；最终跳转状态、路径和查询参数保留情况将在此次部署完成后复验。
+- 已在 Vercel Domains 移除默认项目域名 `chinesegenderpredictor.vercel.app`，仅保留自有根域和 www。同步移除多余的应用重定向配置。

@@ -30,7 +30,7 @@ npm run check
 
 未配置 `SITE_URL` 的构建会主动输出 `noindex,nofollow` 和禁止抓取的 robots，不生成 sitemap；正式环境配置后才打开索引。Vercel Preview 即使继承域名仍保持 noindex。此行为是为了避免测试站抢先收录。脚本不自行加载 `.env`；本地可通过 shell 环境变量或 `node --env-file=.env scripts/build.mjs` 验证正式构建。
 
-部署架构：Spaceship 注册，Cloudflare DNS，Vercel 托管，GitHub 保存代码。发布状态见 [部署记录](DEPLOYMENT.md)。
+部署架构：Spaceship 注册，Cloudflare DNS，Vercel 托管，GitHub 保存代码。发布状态见 [部署记录](DEPLOYMENT.md)。用户要求只使用自有域名；Vercel Domains 仅保留根域和 www（308 跳转至根域），不要重新添加默认 `.vercel.app` 项目域名。
 
 ## 页面与关键词
 
