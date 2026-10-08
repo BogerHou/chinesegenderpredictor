@@ -30,7 +30,7 @@ npm run check
 
 未配置 `SITE_URL` 的构建会主动输出 `noindex,nofollow` 和禁止抓取的 robots，不生成 sitemap；正式环境配置后才打开索引。Vercel Preview 即使继承域名仍保持 noindex。此行为是为了避免测试站抢先收录。脚本不自行加载 `.env`；本地可通过 shell 环境变量或 `node --env-file=.env scripts/build.mjs` 验证正式构建。
 
-部署架构：Spaceship 注册，Cloudflare DNS，Vercel 托管，GitHub 保存代码。发布状态见部署记录。
+部署架构：Spaceship 注册，Cloudflare DNS，Vercel 托管，GitHub 保存代码。发布状态见 [部署记录](DEPLOYMENT.md)。
 
 ## 页面与关键词
 
@@ -71,4 +71,4 @@ npm run check
 4. 验证 Search Console 域名并提交 `/sitemap.xml`。GA4、广告账号在需要时单独配置。
 5. 如接广告，先设计不遮挡计算器的广告位并更新实际数据政策。
 
-浏览器功能与静态输出验收记录见 `docs/QA.md`。
+浏览器功能与静态输出验收记录见 [QA](QA.md)。

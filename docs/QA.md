@@ -1,6 +1,6 @@
 # 首版验收记录
 
-日期：2026-10-08。环境：Node.js 22.22.3、本地静态服务器、Chromium 浏览器。代码与构建配置面向 Vercel；本记录不表示已经发布生产站点。
+日期：2026-10-08。环境：Node.js 22.22.3、本地静态服务器、Chromium 浏览器及 Vercel 生产部署。Vercel 别名已经发布；正式域名 DNS / HTTPS 状态见 [部署记录](DEPLOYMENT.md)。
 
 ## 自动检查
 
@@ -32,16 +32,22 @@
 ## 隐私与部署配置
 
 - 对一次示例计算观察 Network.requestWillBeSent：没有计算触发的网络请求。日期输入无表单 name，提交按钮在本地事件绑定完成后才启用。
-- 本地服务器复用 vercel.json 的安全响应头，200 和 404 均返回 CSP、nosniff、Referrer-Policy 和 Permissions-Policy；正式 Vercel 响应仍需发布后验证。
+- 本地服务器复用 vercel.json 的安全响应头，200 和 404 均返回 CSP、nosniff、Referrer-Policy 和 Permissions-Policy；Vercel 生产别名的实际响应也已验证。
 - 用示例 HTTPS origin 模拟 Production：canonical 正确，index/follow，sitemap 包含 8 个正式路由。
 - 同一 origin 模拟 Vercel Preview：noindex/nofollow，robots 禁止抓取，无 sitemap。
-- 已恢复无 SITE_URL 的本地构建，避免把示例域名带入交付。
+- 发布前已用正式 SITE_URL 构建，本地与生产 canonical 和 sitemap 均指向 `https://chinesegenderpredictor.net`。
+
+## Vercel 线上验收
+
+- `https://chinesegenderpredictor.vercel.app` 的 14 项 HTTP 检查通过，覆盖 8 个页面、canonical、索引指令、JSON-LD、robots、8 URL sitemap、9 个静态资源、真实 404 及安全响应头。
+- Chrome 线上示例计算返回 Boy / 虚岁 32 / 农历三月十五；重置正常；未出现控制台 error。
+- www HTTPS 已返回 308 至根域；根域证书签发与不同解析器的旧 DNSSEC 缓存仍需复验。
 
 ## 仍需正式环境验证
 
-实际 Vercel 发布、真实域名与 HTTPS 跳转、生产响应头、搜索引擎收录和 Search Console 验证尚未执行。未运行 Lighthouse，也没有线上 Core Web Vitals 数据，不提供性能分数或达标承诺。上线后在真实 URL 上完成性能和设备复测。
+根域 HTTPS、完整重定向链、Cloudflare 迁移后的 DNSSEC、搜索引擎收录和 Search Console 尚待完成。已尝试官方 PSI 移动端测量，返回 HTTP 429 RESOURCE_EXHAUSTED（匿名每日配额不可用），未获得 Lighthouse 报告；没有线上 Core Web Vitals 数据，不提供性能分数或达标承诺。
 
-没有对搜索量、关键词难度或收益做独立数值验证；研究结论与来源边界见 [竞品核验](COMPETITOR-ANALYSIS.md)。About/Privacy 的真实运营者与联系渠道仍待实际资料补充。
+没有对搜索量、关键词难度或收益做独立数值验证；研究结论与来源边界见 [竞品核验](COMPETITOR-ANALYSIS.md)。About 已关联实际维护者 BogerHou 的 GitHub 和项目 Issues，并提醒不要公开个人日期信息。
 
 ## 留存与清理
 
