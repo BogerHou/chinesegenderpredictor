@@ -17,7 +17,7 @@ The chart is folklore for entertainment. It is not a medical prediction and has 
 - Automatic Gregorian-to-lunar conversion with a disclosed leap-month convention.
 - Conception-date and estimated due-date modes.
 - An accessible chart, selected-cell highlighting and print styles.
-- Responsive layouts, light and dark themes, self-hosted fonts and images.
+- Responsive layouts, a warm light theme, self-hosted fonts and images.
 - Date calculations happen in the browser. Input dates are not sent to a server or included in share links.
 
 ## Development
