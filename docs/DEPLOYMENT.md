@@ -42,7 +42,7 @@ Cloudflare 只有这两条站点记录，未启用代理，仍处于 Pending。�
 - Vercel 生产别名的 14 项 HTTP 检查通过：8 页 200、独立 H1、有效 JSON-LD、正式 canonical、index/follow、robots、8 URL sitemap、9 个资源、404/noindex 与安全响应头。
 - 浏览器实测示例计算得到 Boy / 虚岁 32 / 农历三月十五，无控制台 error；重置正常。
 - www 已显示 Valid Configuration，实际 HTTPS 请求返回 308，目标为根域。
-- 根域正在签发 SSL 证书，尚不能宣称正式域名全面可用。Cloudflare 公共 DoH 已返回新 A 记录；Google DoH 的 A 查询出现 DNSSEC 验证失败，其 DS 查询仍可命中旧签名缓存（一次观察 TTL 20594 秒）。这是需要等待和复验的实际状态。
+- 23:15 左右，Vercel 根域和 www 均显示 Valid Configuration，证书签发状态已完成，但尚不能宣称正式域名全面可用。Cloudflare 公共 DoH 已返回新 A 记录；Google DoH 的 A 查询出现 DNSSEC 验证失败，其 DS 查询仍可命中旧签名缓存（一次观察 TTL 20594 秒）。本机 Chrome 根域返回 ERR_CONNECTION_CLOSED；这是需要等待和复验的实际状态。
 - PSI 移动端官方 API 返回 429 RESOURCE_EXHAUSTED（匿名每日配额不可用），未取得 Lighthouse 结果；没有性能分数或真实用户 Core Web Vitals 数据。
 - 完成根域 HTTPS 和 DNSSEC 缓存复验后，将精确的 `chinesegenderpredictor.vercel.app` 主机设为 308 跳转至根域，保留路径与查询参数，避免两个生产主机长期并存。
 - 明晚完成 Cloudflare NS / DNSSEC 迁移及下方验收；搜索引擎收录与 Search Console 尚未验证或提交。

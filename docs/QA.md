@@ -41,7 +41,7 @@
 
 - `https://chinesegenderpredictor.vercel.app` 的 14 项 HTTP 检查通过，覆盖 8 个页面、canonical、索引指令、JSON-LD、robots、8 URL sitemap、9 个静态资源、真实 404 及安全响应头。
 - Chrome 线上示例计算返回 Boy / 虚岁 32 / 农历三月十五；重置正常；未出现控制台 error。
-- www HTTPS 已返回 308 至根域；根域证书签发与不同解析器的旧 DNSSEC 缓存仍需复验。
+- www HTTPS 已返回 308 至根域；Vercel 根域和 www 均已显示 Valid Configuration。正式根域的本机访问仍失败，不同解析器的旧 DNSSEC 缓存和完整 HTTPS 链仍需复验。
 
 ## 仍需正式环境验证
 
