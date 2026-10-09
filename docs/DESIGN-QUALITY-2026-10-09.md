@@ -2,6 +2,20 @@
 
 日期：2026-10-09。评审维度与官方来源见 [品质基准](AWARDS-BENCHMARK.md)。这是本站设计和功能的内部验收，不是三个奖项的评委评分或获奖认证。
 
+## 用户发现问题后的产品修正
+
+之前的验收遗漏了中文Chrome中的原生日期提示，并未充分审查公开文案是否面向实际访客。这说明原有检查不能视为完整的产品验收。用户指出后，追加下列修正与真实验证；前文品质基准也补入语言和受众要求。
+
+- 原 `type=date` 会按浏览器语言显示日期格式，即使页面本身为英文；[MDN日期输入说明](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input/date)明确描述了这个行为。主预测器和年龄计算器均改为显式英文Month、Day、Year，月份为Jan至Dec，年份可直接输入；不依赖原生日期框的显示语言。
+- 6个日期控件保持完整无障碍名称、无name的提交保护、本地计算和错误焦点。月份／日／年份不完整分别提示；1900至2099年份范围、闰日及真实历日由严格校验处理，不默默修改无效日期。
+- 中文Chrome实际填写Jun15,1995／May1,2026，键盘Enter得到Boy／32／month3；Feb30保留原选择并聚焦Day，1800聚焦Year；Due模式只清目标日期，示例Jan22,2027得到同一结果；Start over清空6项并恢复受孕模式及Month焦点。年龄页Feb29,2000／Mar1,2026为传统27／regular26。
+- 390×844手机无页面溢出，主要按钮bottom约741px；941×707窄桌面约683px，Month／Day完整可见；768平板及年龄工具均无日期组溢出。手机字体16px。自有Phosphor下拉箭头不改变select语义、点击或键盘，独立源码复查通过。
+- 11页访客文案已审查，清理coordinates、matrix、代码版本、库与时区实现、内部设计／审查原则及research instrument等措辞；改成实际用途、年龄、月份、准确性和玩法。必要研究来源、娱乐边界、隐私透明及授权条款保留。网页可见文本检查未发现中文汉字或所列内部术语。
+- 正式配置23项测试、11页及596个内部路径／资源检查通过。[功能发布e3c64d0](https://github.com/BogerHou/chinesegenderpredictor/commit/e3c64d0b661fc3b761381d7838c811d27f7331a5)，[CI成功](https://github.com/BogerHou/chinesegenderpredictor/actions/runs/37873689415)，[Vercel成功](https://vercel.com/simonhou/chinesegenderpredictor/9VMUvWtc92yMZ6Mx9mLJ9ZpbJPK2)。正式站20/20检查通过，11页HTML和CSS／client.js共13项与本地构建一致；Chrome正式站两工具均已验证英文控件和正常计算，控制台无error/warn。
+- 四份年度PDF也去掉代码版本、库名和revision说明，改为Calendar references；八页重新渲染，矩阵、日期表、纸张规格、页数和完整MIT许可与上一版一致，其他42项公开资产未变。最终发布[`7410cba`](https://github.com/BogerHou/chinesegenderpredictor/commit/7410cbaf9ecbbf662a5b71ebba444fd4841a18b5)，[CI成功](https://github.com/BogerHou/chinesegenderpredictor/actions/runs/37874345179)，[Vercel成功](https://vercel.com/simonhou/chinesegenderpredictor/FWUSFPndouRgMHfduDCuC4WPrWnD)。11页HTML、CSS／client.js及四份年度PDF共17项线上响应与本地文件一致。本次没有以旧性能报告冒充新的测量。
+- 最终 `verify:live` 20/20通过，含50项静态资源。原先50路并行下载在本机对未修改的投票Letter PDF两次出现ECONNRESET；单独请求HTTP200且与源码一致。资产检查改为最多3路后完整通过；仍按实际失败返回非零状态，不把网络异常当成功。
+- 私有 `.qa/english-input/` 保留桌面与手机正式站截图、构建／生产／文件比对记录及两张PDF规格拼图。8张PDF渲染中间图移入本任务废纸篓；本轮预览服务已停止，任务标签页及临时视口均已清理。
+
 ## 设计方向
 
 面向准父母和家庭的温暖工具与日历资料。采用原有奶油白、柔玫瑰和粉蓝配色；用 Cormorant Garamond 标题呼应传统日历和纸质纪念卡，Manrope 保持输入、数据及长文的清楚阅读。设计参数为变化度7、动态强度4、密度4；使用原生CSS与现有静态架构。固定浅色是本项目已有品牌选择。
@@ -32,7 +46,7 @@
 - 18份PDF与原版本保持一致，沿用此前逐页渲染和源数据核对，纸张规格、页数与下载链接准确；本轮没有测试实体打印机。
 - 普通关键文字对比度经独立源码核对为4.96至6.10:1；粉蓝和玫瑰之外仍有文字标签传达B/G。新增字体23KB，本地加载；NPM安装后审计0已知漏洞。未加入重型动画库。
 
-## 发布与性能回执
+## 此前品质升级的发布与性能回执（历史）
 
 - 设计与交互发布：[`1e142d5`](https://github.com/BogerHou/chinesegenderpredictor/commit/1e142d5c90b0980cd40964e16cf58bfa9120ffa5)。最终网页资产发布：[`c884cb3`](https://github.com/BogerHou/chinesegenderpredictor/commit/c884cb3ba8bc3f7dd1421e50add2324efc07e818)；[GitHub CI](https://github.com/BogerHou/chinesegenderpredictor/actions/runs/37871853054)成功，[Vercel生产部署](https://vercel.com/simonhou/chinesegenderpredictor/H6tsyQYAAKwvi4dX3H5fcPZBPPhb)状态success。
 - 正式域名 `verify:live` 20/20通过：11页、11网址sitemap、50项静态资源（含18份PDF）、真实404、安全头、HTTP／www跳转及旧Vercel项目域名404。一轮HTTP连接曾中断，完整重试后通过；不是已确认的跳转缺陷。

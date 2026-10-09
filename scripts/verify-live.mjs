@@ -60,7 +60,9 @@ await Promise.all([
 const pdfs=(await readdir(new URL('../dist/downloads/',import.meta.url))).filter(file=>file.endsWith('.pdf')).map(file=>'/downloads/'+file);
 const assets = ['/favicon.svg', '/third-party-notices.txt', ...pdfs, ...(await readdir(new URL('../dist/assets/', import.meta.url))).map(file => '/assets/' + file)];
 const failedAssets = [];
-await Promise.all(assets.map(path => inspect(path, async () => {
+// Bound downloads so the check does not overload a local proxy or connection pool.
+for (let offset=0;offset<assets.length;offset+=3) {
+await Promise.all(assets.slice(offset,offset+3).map(path => inspect(path, async () => {
   const response = await fetch(new URL(path, base), {signal: AbortSignal.timeout(20000)});
   const data = await response.arrayBuffer();
   const type = response.headers.get('content-type') || '';
@@ -68,6 +70,7 @@ await Promise.all(assets.map(path => inspect(path, async () => {
   const pass = response.status === 200 && data.byteLength > 0 && !type.includes('text/html') && (!isPdf || (type.includes('application/pdf') && new TextDecoder().decode(data.slice(0,5)) === '%PDF-'));
   if (!pass) failedAssets.push({path, status: response.status, type, bytes: data.byteLength});
 })));
+}
 report('Static assets', failedAssets.length === 0, {checked: assets.length, failed: failedAssets});
 
 async function redirectCheck(url) {

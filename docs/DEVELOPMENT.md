@@ -60,15 +60,18 @@ npm run verify:live
 - `src/calendar.mjs`：严格日期校验、农历转换、虚岁与结果。
 - `src/chart.mjs`：固定版本的传统矩阵；不是统一官方原本。
 - `src/client.mjs`：交互、字段错误定位；农历模块只在计算器页面按需加载。
+- `src/date-parts.mjs`：英文 Month／Day／Year 控件的输入整理，拼成计算器使用的日期；实际历日继续由 `calendar.mjs` 严格校验。
 - `src/calculator-loader.mjs`：模块失败或 15 秒超时的恢复处理；保持按钮禁用并显示重载入口。
 - `scripts/build.mjs`：预渲染11页、打包、robots/sitemap/canonical。
 - `scripts/check.mjs`：元数据、链接、唯一 ID、索引策略和无脚本表单保护检查。
 - `scripts/verify-live.mjs`：生产 HTTP、跳转、资源和 PDF 检查。
-- `tests/calendar.test.mjs`、`tests/calculator-loader.test.mjs`：香港天文台日期夹具、输入边界、周岁／虚岁差异、闰日生日与加载恢复；当前共19项测试。
+- `tests/calendar.test.mjs`、`tests/calculator-loader.test.mjs`、`tests/date-parts.test.mjs`：香港天文台日期夹具、输入边界、周岁／虚岁差异、闰日生日、加载恢复和英文日期分段输入；当前共23项测试。
 
 虚岁 = 受孕农历年 − 出生农历年 + 1。年龄页同时显示目标日期的公历周岁；2月29日生日在非闰年以3月1日为周岁增加日，页面明确说明此展示约定。预产期模式减266天得到估算受孕日。闰月使用同编号月份并明确提示，此为本站约定。图表支持虚岁18至45，不对超范围年龄做钳制。完整MIT和字体许可保存在 `THIRD-PARTY-NOTICES.md`，同时随网站发布文本副本。
 
 ## 设计
+
+公开页面是面向准父母和家庭的英文产品，不展示内部设计思路、工程实现、SEO词表或评审话术。用法、实际来源、娱乐性质及隐私说明必须让访客能理解。技术细节保存在仓库文档。日期输入使用显式英文Month／Day／Year；不能依赖浏览器原生日期框或单独设置lang来保证英文。验收必须包含中文Chrome、手机及两种计算器的真实输入与错误焦点。
 
 工具优先，Cormorant Garamond 标题与 Manrope 正文均自托管；暖奶油白底色、玫瑰粉主色，淡蓝和淡粉区分图表及预测结果。十二个月刻度与实际农历年龄形成首页的视觉识别，刻度不是月相。圆角按面板、输入控件与图标分别设置。全站固定明亮主题，不跟随系统暗色偏好。当前设计参数：变化7、动效4、密度4；仅交互反馈，无自动播放动画，尊重减少动态效果设置。公开评审维度和本轮检查见 [品质基准](AWARDS-BENCHMARK.md)及[品质验收](DESIGN-QUALITY-2026-10-09.md)。
 

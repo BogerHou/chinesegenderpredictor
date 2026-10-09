@@ -2,7 +2,12 @@
 
 状态更新：2026-10-09（Asia/Shanghai）。11页网站的设计与体验升级已发布，GitHub CI、Vercel部署、Chrome浏览器及正式域名20项检查均已通过。此前08:00的10页生产版本及Cloudflare迁移已完成验收：橙云、严格HTTPS与新DNSSEC信任链均已启用，美国及德国外部探针确认代理HTTP 200；Google当时确认首页已收录、sitemap读取成功并发现10个网址。用户即时迁移要求已替代原晚间排期，原23:20自动任务已删除。
 
-## 品质升级已发布
+## 英文日期与产品文案修正已发布
+
+- 两个计算器采用显式英文Month／Day／Year，中文Chrome中也保持英文；11页访客文案清理内部工程／设计表达，4份年度PDF来源说明同步修正。23项测试、11页及596条内部路径／资源通过；正式域名验收及17项线上文件比对通过。
+- 最终功能与PDF提交[`7410cba`](https://github.com/BogerHou/chinesegenderpredictor/commit/7410cbaf9ecbbf662a5b71ebba444fd4841a18b5)，[CI](https://github.com/BogerHou/chinesegenderpredictor/actions/runs/37874345179)成功，[Vercel](https://vercel.com/simonhou/chinesegenderpredictor/FWUSFPndouRgMHfduDCuC4WPrWnD)成功。基础设施及Search Console测量范围不变。当前验收见 [产品修正记录](DESIGN-QUALITY-2026-10-09.md)。
+
+## 此前品质升级已发布（历史）
 
 - 最终功能与资产发布[`c884cb3`](https://github.com/BogerHou/chinesegenderpredictor/commit/c884cb3ba8bc3f7dd1421e50add2324efc07e818)，[GitHub CI](https://github.com/BogerHou/chinesegenderpredictor/actions/runs/37871853054)成功，[Vercel生产部署](https://vercel.com/simonhou/chinesegenderpredictor/H6tsyQYAAKwvi4dX3H5fcPZBPPhb)状态success。后续文档回执提交不改变网站功能。
 - 正式配置19项测试、11页及595个内部路径／资源检查通过；正式域名20/20检查通过，50个静态资源可用，16个新版网页资产与本地构建逐字节一致。原有域名、路由、PDF和日期本地处理继续保留。
