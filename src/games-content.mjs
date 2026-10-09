@@ -8,10 +8,21 @@ function preview(slug,alt,caption){
   return `<figure class="game-preview"><img src="/assets/games-${slug}-preview.png" alt="${alt}" width="540" height="764" loading="lazy"><figcaption>${caption}</figcaption></figure>`;
 }
 
+function gameIndex(){
+  const games=[
+    ['prediction-cards','Prediction cards','Any number of guests'],
+    ['team-vote','Team vote','Up to 20 guests per sheet'],
+    ['name-race','Name race','2+ players or pairs'],
+    ['bingo','Bingo','2-8 players or pairs'],
+    ['word-scramble','Word scramble','2+ players or pairs']
+  ];
+  return `<nav class="game-index" aria-label="Choose a party game">${games.map(([slug,label,players],index)=>`<a class="game-index-item" href="#${slug}"><img src="/assets/games-${slug}-preview.png" alt="" width="540" height="764" loading="lazy"><span class="game-index-label"><span class="game-index-number" aria-hidden="true">${String(index+1).padStart(2,'0')}</span>${label}</span><span class="game-index-meta">${players}</span></a>`).join('')}</nav>`;
+}
+
 export function gamesBody(){return `
 <div class="note-box"><p><strong>Make a guess, share a message, or play a word game.</strong> These activities work before or after an announcement. The parents choose what to share; a guest vote or traditional chart is not a way to establish a baby’s sex.</p></div>
 <div class="download-box" id="download"><h2>Download the free printable gender reveal games</h2><p>The nine-page party kit includes prediction cards, a team vote sheet, an A-Z name race, eight different Bingo cards, and a word scramble with a separate answer page. Choose A4 or US Letter. No email or account is needed.</p><div class="download-actions"><a class="button primary small" href="/downloads/gender-reveal-games-a4.pdf" download>${icon('download-simple')}Complete kit: A4 PDF</a><a class="button secondary small" href="/downloads/gender-reveal-games-letter.pdf" download>${icon('download-simple')}Complete kit: US Letter PDF</a></div><p class="small-copy">Single-game downloads are beside each set of instructions below. Keep the word-scramble answers with the host.</p></div>
-<nav class="resource-links" aria-label="Choose a party game"><a href="#prediction-cards">Prediction cards</a><a href="#team-vote">Team vote</a><a href="#name-race">Name race</a><a href="#bingo">Bingo</a><a href="#word-scramble">Word scramble</a></nav>
+${gameIndex()}
 <h2>Choose a game for your gathering</h2>
 <div class="table-wrap" tabindex="0" role="region" aria-label="Printable game comparison"><table class="month-table"><caption>Five games at a glance</caption><thead><tr><th scope="col">Game</th><th scope="col">Players</th><th scope="col">When to use it</th><th scope="col">Complete-kit pages</th></tr></thead><tbody><tr><th scope="row">Prediction cards</th><td>Any number</td><td>Arrival or a quiet moment</td><td>1</td></tr><tr><th scope="row">Team vote</th><td>Any number</td><td>Before the announcement</td><td>2</td></tr><tr><th scope="row">A-Z name race</th><td>2+, alone or in pairs</td><td>A three-minute round</td><td>3</td></tr><tr><th scope="row">Party-moment Bingo</th><td>2-8 with unique cards</td><td>Throughout the gathering</td><td>4-7</td></tr><tr><th scope="row">Word scramble</th><td>2+, alone or in pairs</td><td>A short round; answers for the host</td><td>8-9</td></tr></tbody></table></div>
 <h2 id="prediction-cards">1. Boy or girl prediction cards</h2><p><strong>Players:</strong> any number. <strong>Time:</strong> a few minutes. <strong>Print:</strong> page 1 has four cards; give one to each guest.</p>

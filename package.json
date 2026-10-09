@@ -13,6 +13,7 @@
     "verify:live": "node scripts/verify-live.mjs"
   },
   "dependencies": {
+    "@fontsource/cormorant-garamond": "^5.3.0",
     "@fontsource/manrope": "^5.3.0",
     "@phosphor-icons/core": "^2.1.1",
     "lunar-javascript": "^1.7.7"
