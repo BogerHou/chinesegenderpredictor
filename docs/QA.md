@@ -1,6 +1,6 @@
 # 站点验收记录
 
-更新日期：2026-10-09（Asia/Shanghai）。第二轮内容版本已完成正式配置的本地自动检查及新增打印资料的逐页验收；本地浏览器验收完成，生产发布回执待补。下面保留首版、上一轮10页版本和08:00 Cloudflare迁移的历史证据。DNS／HTTPS状态见 [部署记录](DEPLOYMENT.md)。
+更新日期：2026-10-09（Asia/Shanghai）。第二轮内容版本已完成正式配置的本地自动检查及新增打印资料的逐页验收；本地、浏览器与正式域名发布验收完成。下面保留首版、上一轮10页版本和08:00 Cloudflare迁移的历史证据。DNS／HTTPS状态见 [部署记录](DEPLOYMENT.md)。
 
 ## 2026-10-09 第二轮内容版本
 
@@ -14,14 +14,14 @@
 - 新增或更新的14份游戏／民俗PDF共38页已逐页渲染并核对布局，A4与US Letter均已检查。Bingo卡片唯一性及word scramble字母／答案对应由生成器校验；4份年度PDF共8页与上一版逐字节一致，沿用先前数据及渲染验收。当前合计18份PDF、46页；未测试实体打印机。
 - 本地预览服务器补全PNG与PDF的正确MIME类型。日期计算仍在浏览器本地进行，页面链接不携带生日、受孕日或预测结果；测量范围仍为Search Console。
 
-### 本轮待完成回执
+### 本轮浏览器与生产回执
 
 - 本地Chrome实测：生日2000-06-01，目标2026-02-17显示周岁25／虚岁27；改到2026-06-01显示周岁26／虚岁27；Start over清空结果。2027按钮跳至首页#predictor，主工具示例仍为Boy／虚岁32／农历三月十五。
 - 390×844手机视口下游戏与民俗页没有页面横向溢出（根scrollWidth375px）；新预览305×432px保持纸张比例，民俗表只在自身容器内横向滚动。手机导航展开、跳转及收起正常；本轮控制台未出现error或warn。
-- 正式域名真实PDF下载与最后生产浏览器检查待发布后完成。
-- GitHub提交／CI及Vercel生产部署的实际状态。
-- 生产 `npm run verify:live`、11网址sitemap、18份PDF和新页面的正式域名响应。
-- 浏览器标签页、测试下载与临时渲染文件清理。
+- 18/18线上PDF均HTTP200，逐文件SHA256与源码一致（首次18路并行校验出现瞬时TLS连接重置，改为3路并行重试后全部完成）。Chrome正式域名实测年龄工具返回周岁25／虚岁27，手机民俗指南无页面横向溢出、预览比例正确且没有问卷表单。新游戏页显示5种游戏及九页整套下载；实际下载A4整套文件SHA256为`a769e11751c37c99f5ce50a4553231e0f960b417b961b4051c355f599fd489df`，与源码文件一致。
+- 功能发布提交：[`ff63611`](https://github.com/BogerHou/chinesegenderpredictor/commit/ff636116966f9be7f82b8082620f79bd5e3a35f2)。[GitHub CI](https://github.com/BogerHou/chinesegenderpredictor/actions/runs/37868539857)成功，包含生产构建和preview noindex检查；[Vercel生产部署](https://vercel.com/simonhou/chinesegenderpredictor/ygCFjt78VsSTv4jyXASLM5WREdQT)状态success。
+- 正式域名 `npm run verify:live`：20/20通过。11页均HTTP200、一个H1、自引用canonical、index/follow及有效JSON-LD；sitemap含11个正确网址，35个静态资源（含18份PDF）通过。真实404及安全头、HTTP／www到根域跳转均通过；移除的Vercel项目域名仍404。
+- 已关闭本轮唯一验收标签页、恢复临时视口并停止本轮本地预览服务。38张逐页渲染图、8张审核拼图、合并后的文案草稿、旧投票预览图和测试下载均移入任务废纸篓。仅保留私有打印核对记录、两张纸张规格拼图、生产检查日志、线上PDF哈希记录和一张上线截图；源码及可下载最终文件保留。
 
 新增指南的Google收录及搜索表现需后续Search Console真实报告；构建通过或sitemap包含网址不能作为收录回执。
 

@@ -1,6 +1,6 @@
 # 实施路线
 
-更新日期：2026-10-09（Asia/Shanghai）。依据用户指定Semrush／Similarweb入口的 [关键词机会方案](SEO-OPPORTUNITIES-2026-10-09.md)，第二轮源码已扩展至11页并通过本地正式构建，新增打印资料已逐页检查；浏览器和生产发布回执待补。此前08:00已完成10页生产版与Cloudflare橙云迁移。采用静态站、esbuild与lunar-javascript，GitHub保存代码、Vercel托管、Cloudflare提供DNS和代理。
+更新日期：2026-10-09（Asia/Shanghai）。依据用户指定Semrush／Similarweb入口的 [关键词机会方案](SEO-OPPORTUNITIES-2026-10-09.md)，第二轮已扩展至11页并发布，新增打印资料已逐页检查；浏览器、GitHub CI、Vercel与正式域名20项验收均通过。此前08:00已完成10页生产版与Cloudflare橙云迁移。采用静态站、esbuild与lunar-javascript，GitHub保存代码、Vercel托管、Cloudflare提供DNS和代理。
 
 ## 第二轮目标与执行状态
 
@@ -11,7 +11,7 @@
 | 3 | 可打印小游戏 | 已扩展至5种，提供8张不同Bingo卡及10题word scramble与答案；单项、九页整套A4／Letter资料和实际预览完成，14份游戏／民俗PDF共38页已逐页渲染 |
 | 4 | 2027年度入口 | 已自然补充年度词表述，新增直达主计算器入口；不另建首页同义词页面，不以更换年份声称更准确 |
 | 5 | 民俗猜测指南 | 新路由已实现，八种说法逐项核对来源；空白娱乐记录表可跳过，指南与主工具、准确性及游戏页互链，来源记录已保存 |
-| 6 | 检查与发布 | 正式配置本地 `build:verified` 通过19项测试、11页及518个内部路径／资源检查；浏览器验收、GitHub CI、Vercel部署及生产HTTP回执待完成 |
+| 6 | 检查与发布 | 正式配置本地 `build:verified` 通过19项测试、11页及518个内部路径／资源检查；浏览器、GitHub CI及Vercel成功，正式域名20/20检查通过；功能发布提交ff63611，具体回执见QA与部署记录 |
 
 当前交付为18份PDF共46页：4份年度资料共8页保持原文件不变，14份游戏／民俗资料共38页。本轮保持日期本地处理、Search Console测量范围、Cloudflare橙云及自有主域名配置。新增页面收录和流量需后续Search Console真实数据，不由本地验收推断。
 

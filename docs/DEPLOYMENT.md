@@ -1,12 +1,13 @@
 # 部署记录
 
-状态更新：2026-10-09（Asia/Shanghai）。第二轮11页内容版本已通过本地正式构建，远程部署及浏览器验收待补回执。此前08:00的10页生产版本及Cloudflare迁移已完成验收：橙云、严格HTTPS与新DNSSEC信任链均已启用，美国及德国外部探针确认代理HTTP 200；Google当时确认首页已收录、sitemap读取成功并发现10个网址。用户即时迁移要求已替代原晚间排期，原23:20自动任务已删除。
+状态更新：2026-10-09（Asia/Shanghai）。第二轮11页内容版本已发布，GitHub CI、Vercel部署、Chrome浏览器及正式域名20项检查均已通过。此前08:00的10页生产版本及Cloudflare迁移已完成验收：橙云、严格HTTPS与新DNSSEC信任链均已启用，美国及德国外部探针确认代理HTTP 200；Google当时确认首页已收录、sitemap读取成功并发现10个网址。用户即时迁移要求已替代原晚间排期，原23:20自动任务已删除。
 
-## 第二轮内容版本待发布
+## 第二轮内容版本已发布
 
 - 本地 `SITE_URL=https://chinesegenderpredictor.net VERCEL_ENV=production npm run build:verified` 已通过：19项测试、11页、518个内部路径／资源检查。
 - 当前源码包含增强年龄对照、准确性／方法问题、2027主工具入口、五种可打印游戏及新增民俗指南。18份PDF共46页，其中4份年度PDF保持上一版原文件不变。
-- GitHub CI、Vercel生产部署、正式域名新内容、11网址sitemap及18份PDF下载需要本轮发布后的实际回执，不能由本地构建结果推断。
+- 功能发布提交[`ff63611`](https://github.com/BogerHou/chinesegenderpredictor/commit/ff636116966f9be7f82b8082620f79bd5e3a35f2)。[GitHub CI](https://github.com/BogerHou/chinesegenderpredictor/actions/runs/37868539857)成功，生产构建及preview noindex检查通过；[Vercel部署](https://vercel.com/simonhou/chinesegenderpredictor/ygCFjt78VsSTv4jyXASLM5WREdQT)状态success。
+- 生产 `verify:live` 20/20通过：11个页面、11网址sitemap、35个静态资源（含18份PDF）、真实404、安全头、HTTP／www跳转及已移除Vercel项目域名404。Chrome已核对正式新游戏页、手机民俗指南及年龄结果，实际A4整套下载文件与源码哈希一致。
 - 既有Cloudflare、DNSSEC、Vercel域名和Search Console测量范围沿用08:00已验收配置。本轮未授权新增行为统计，亦不应重新添加默认`.vercel.app`项目域名。
 
 具体功能与打印资料检查见 [QA](QA.md)。
