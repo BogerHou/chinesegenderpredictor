@@ -101,3 +101,20 @@ body{font-size:16px}h1,h2{font-family:var(--display);font-weight:600;letter-spac
 .resource-preview picture:last-child{transform:rotate(7deg) translateY(-7px)}
 .resource-preview picture img,.resource-preview picture img:first-child,.resource-preview picture img:last-child{width:100%;height:100%;transform:none}
 @media(max-width:767px){.resource-preview picture{flex-basis:136px;width:136px;height:192px}}
+
+/* Explicit English date controls are independent of the browser's date-picker locale. */
+.sr-only{position:absolute!important;width:1px;height:1px;padding:0!important;margin:-1px!important;overflow:hidden;clip-path:inset(50%);white-space:nowrap;border:0}
+.date-field{margin:0;padding:0;border:0;min-inline-size:0}
+.date-field .field-label{padding:0;margin-bottom:8px;font-size:14px;font-weight:600;line-height:1.7}
+.date-parts{display:grid;grid-template-columns:minmax(84px,1.25fr) minmax(54px,.8fr) minmax(66px,1fr);gap:6px}
+.date-parts select,.date-parts input{font:inherit;font-size:14px;height:50px;min-width:0;width:100%;border:1px solid var(--input-line);border-radius:8px;background:var(--input);color:var(--text);padding:10px 8px;font-variant-numeric:tabular-nums}
+.date-parts input::placeholder{color:var(--muted);opacity:1}
+.date-select{position:relative;min-width:0}
+.date-select select{appearance:none;padding-right:24px}
+.date-select .icon{pointer-events:none;position:absolute;right:7px;top:50%;transform:translateY(-50%);width:12px;height:12px;color:var(--muted)}
+.date-parts select:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+.date-parts [aria-invalid=true]{border-color:var(--rose-text)}
+@media (min-width:768px) and (max-width:1100px){.field-grid{grid-template-columns:1fr}}
+@media (min-width:901px) and (max-width:1100px){.page-home .field-grid{grid-template-columns:1fr 1fr}.page-home .date-parts{grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr) minmax(0,1fr);gap:4px}.page-home .date-parts select,.page-home .date-parts input{padding-inline:6px;font-size:14px}}
+@media(max-width:767px){.date-parts select,.date-parts input{font-size:16px}}
+@media (min-width:901px) and (max-width:1100px){.page-home .date-select select{padding-right:21px}}

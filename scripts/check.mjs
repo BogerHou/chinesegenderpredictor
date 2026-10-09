@@ -33,7 +33,16 @@ for(const [route] of routes){
  }
  if(html.includes('id="predictor-form"')||html.includes('id="age-form"')){
    assert(/type="submit" disabled/.test(html),`${route}: no-JS submission protected`);
-   assert(!/id="(?:birth|target)-date"[^>]*name=/.test(html),`${route}: dates excluded from form submission`);
+   assert(!/type="date"/.test(html),`${route}: native localized date controls are not used`);
+   for(const prefix of ['birth','target']){
+     for(const part of ['month','day','year']){
+       const control=html.match(new RegExp(`<(?:input|select) id="${prefix}-date-${part}"[^>]*>`))?.[0];
+       assert(control,`${route}: ${prefix} ${part} date control exists`);
+       assert(!/\bname=/.test(control),`${route}: date parts excluded from form submission`);
+       assert(control.includes(`aria-labelledby="${prefix}-label ${prefix}-${part}-label"`),`${route}: each date part has its full accessible label`);
+     }
+   }
+   assert(html.includes('<option value="">Month</option>')&&html.includes('<option value="">Day</option>'),`${route}: English date prompts`);
  }
 }
 const robots=await readFile('dist/robots.txt','utf8');
