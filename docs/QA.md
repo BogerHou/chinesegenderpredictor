@@ -11,7 +11,7 @@
 - 6 份 A4／US Letter PDF 共 14 页已逐页渲染检查；4 份年度 PDF 的 336 个图表格分别核对，2026／2027 全部月界与香港天文台资料核对。未测试实体打印机。
 - 新版手机 390×844 视口：首页、年度页和游戏页的内容宽与 scrollWidth 均为 375 CSS px，无页面横向溢出；首页提交按钮 top 735／bottom 784，较旧版约 top 827 上移。农历年龄示例 2000-06-01 → 2026-02-17 实测得到 27。
 - Vercel 实际执行 `npm run build:verified`，先测试、再构建及检查；GitHub workflow 另验 preview noindex，已成功。
-- Search Console 域名所有权于 00:11 在当前个人账号验证成功；本轮 sitemap 提交及读取状态见文末，实际收录仍待跟踪。
+- Search Console 域名所有权于 00:11 在当前个人账号验证成功；本轮 sitemap 提交、读取及首页收录状态见文末。
 
 以下首版记录保留当时的 8 页、12 项测试和 226 个内部路径结果，不代表改进版生产验收。
 
@@ -56,9 +56,9 @@
 - Chrome 线上示例计算返回 Boy / 虚岁 32 / 农历三月十五；重置正常；未出现控制台 error。
 - www HTTPS 返回 308 至根域；Vercel 根域和 www 均显示 Valid Configuration，正式根域浏览器访问正常，SSL 有效。默认 `.vercel.app` 项目域名已按用户最新要求移除。
 
-## 仍需正式环境验证
+## 搜索数据与测量边界
 
-Cloudflare 迁移后的 DNSSEC 与实际搜索收录尚待验证。Search Console 所有权已验证；新版生产验收及 sitemap 状态见下方回执。
+Cloudflare 迁移、DNSSEC 与首页收录已在下方最终回执中验证。其他页面的实际收录、搜索词、展示和点击仍需后续 Search Console 数据；未把提交或发现网址当作全部收录。
 
 2026-10-08 23:43 的[官方 PageSpeed Insights 报告](https://pagespeed.web.dev/analysis/https-chinesegenderpredictor-net/d2vifh7syr?form_factor=mobile)已成功取得：首页移动端 Performance 99，Accessibility／Best Practices／SEO 均 100；LCP 1.9s、FCP 1.2s、TBT 20ms、CLS 0.001，桌面四项均 100。此前匿名 API 的 429 不是最终测量状态。该报告是本轮改动前首页的实验室测量；CrUX 无数据，不能据此宣称全站真实用户 Core Web Vitals 达标或搜索排名。
 
@@ -88,7 +88,22 @@ Cloudflare 迁移后的 DNSSEC 与实际搜索收录尚待验证。Search Consol
 - `npm run verify:live`：19/19 通过，含 10 页、10 URL sitemap、6 份 PDF、资源、安全头、404、HTTP/www 跳转；默认 Vercel 项目域名仍为 404。
 - 正式域名示例返回 Boy、虚岁 32、农历三月十五，控制台无 error。
 - HTTPS sitemap 提交已接受，最初报告无法抓取；00:15:58 的 Google 实时检查抓取成功，重新提交过一次。07:40 复查报告已转为“成功”，上次读取 2026-10-09、发现 10 个网页、0 个视频；保留 `.qa/optimization/gsc-sitemap-success.png` 私有回执。读取成功不等于页面已收录。
-- 普通请求和 Googlebot User-Agent 请求均取得 sitemap HTTP 200、application/xml、10 个 URL，无重定向或 noindex。早期 Google DS 查询仍有旧记录缓存，当时 TTL 16784 秒；没有证据将其认定为报告延迟的原因，今晚迁移仍遵守原等待窗口。
+- 普通请求和 Googlebot User-Agent 请求均取得 sitemap HTTP 200、application/xml、10 个 URL，无重定向或 noindex。早期 Google DS 查询仍有旧记录缓存，当时 TTL 16784 秒；没有证据将其认定为报告延迟的原因。当时仍遵守原等待窗口，之后用户明确改为立即迁移。
 - 用户选择先使用 Search Console 观察搜索词、展示和点击，暂不新增访客行为统计脚本。
 - 首页索引请求已获 Google 确认，加入优先抓取队列；这不是已收录回执。首页、农历年龄页及 2027 年度页的已存储索引检查均显示 Google 无法识别网址、未收录，Google 选定 canonical 为“不适用”；2027 页于 07:39 复核。未对年龄页或年度页重复请求索引。这里记录的是 Google 报告状态，正式 HTML 的自引用 canonical 已通过生产检查。
 - PDF 渲染中间文件、未使用的年度预览图、临时 DNS 截图和被新脚本替代的旧验收脚本已移入废纸篓；保留发布源资产、PDF 和必要 Google 回执。浏览器网络拦截与手机视口模拟已恢复。
+
+## 2026-10-09 Cloudflare 最终验收
+
+以下 08:00 回执取代上述早期“首页未收录”及迁移等待状态。用户已明确要求现在迁移并开启橙云，覆盖原 23:20 排期。
+
+- Spaceship NS 已成功保存为 `ashley.ns.cloudflare.com`、`jeremy.ns.cloudflare.com`；Google DoH 返回新 NS，Google 所有权 TXT 保留。Cloudflare zone 与 Universal SSL 证书均 Active，SSL 模式为 Full (strict)，根域 A 与 www CNAME 均为 Proxied。
+- Cloudflare DNSSEC 已启用，Spaceship 新 DS 保存成功（2371 / 13 / 2）；Google 和 Cloudflare 公共 DoH 的新 DS 回答均 AD=true，无 SERVFAIL。控制台显示 DNSSEC Success；完整 digest 见部署记录。
+- 08:00:33 的 [Globalping 原始回执](https://api.globalping.io/v1/measurements/21Vp3uPkyli2dkRb800021HX6)：美国 Buffalo／HostPapa 与德国 Falkenstein／Hetzner 均为根域 HTTPS 200、server=cloudflare、cf-cache-status=DYNAMIC；TLS 1.3 验证通过，证书 SAN 包含根域及通配子域。CF-Ray 分别为 `a4791b11c8832029-IAD`、`a4791b11c9a471d2-FRA`。仅证明这两处实际代理正常，未测量全球性能。
+- www HTTPS 实测 308 至根域，server=cloudflare，CF-Ray `a479183608f84383-LAX`。本机根域仍可因网络路由缓存直达 Vercel；未修改用户系统代理，远端回执用于补足橙云路径验证。
+- 迁移后 `npm run verify:live` 19/19 通过，覆盖 10 页、10 URL sitemap、6 PDF、20 项资源、安全头、真实 404、HTTP/www 跳转及已移除 Vercel 项目别名的 404。这一检查覆盖可访问性与 SEO 配置，实际代理路径由上述外部回执证明。
+- Privacy 提交 `d2664e6` 已发布：[Vercel 部署](https://vercel.com/simonhou/chinesegenderpredictor/CfyvhQrpnmCdU8yY8SfTm84NLL3G) success，[GitHub CI](https://github.com/BogerHou/chinesegenderpredictor/actions/runs/37861456963) success；正式构建的 17 项测试和 416 个内部路径检查通过。生产隐私正文包含 Cloudflare 请求/IP/安全日志处理，日期与结果仍在浏览器本地计算。
+- 浏览器正式站示例返回 Boy / 虚岁 32 / 农历三月十五，无控制台 error；游戏 A4 PDF 实际下载与源文件 SHA-256 一致（`1747535588034341942cb7712cf44e992e516ff8116109252ad53dd3237ccca9`）。
+- Search Console 存储报告显示首页“已收录到 Google／已编入索引”，最后 Googlebot 智能手机抓取为 00:19:55，Google canonical 为所检查的正式根域。08:00:42 迁移后实时测试显示“网址可编入 Google 索引”、抓取成功、允许抓取和索引。其他页面的实际收录仍需后续报告。sitemap 独立报告仍为成功、发现 10 页；首页旧存储报告的 sitemap 临时处理提示没有覆盖该独立成功回执。
+- Cache Level 为 Standard，Browser Cache TTL 为 Respect Existing Headers。Web Analytics/RUM、Speed Brain、Rocket Loader 关闭；没有增加行为统计或强制全站缓存。
+- 已删除 `chinese-gender-predictor-dns` 旧晚间自动任务。Cloudflare、Spaceship、Search Console 与线上测试任务标签页均已关闭；用户原有无关标签页保留。测试下载和多余缓存设置截图移入本任务废纸篓目录；保留源码、6 PDF、唯一迁移与 Google 验收回执于私有 `.qa/migration/`。

@@ -1,6 +1,6 @@
 # 部署记录
 
-状态更新：2026-10-09 07:40（Asia/Shanghai）。10 页改进版已发布并通过生产验收；Google 已成功读取 sitemap 并发现 10 个网址。Cloudflare／DNSSEC 迁移仍待今晚窗口，实际搜索收录另行跟踪。
+状态更新：2026-10-09 08:00 验收完成（Asia/Shanghai）。10 页改进版已发布；Cloudflare 橙云、严格 HTTPS 与新 DNSSEC 信任链均已启用并验证。美国及德国外部探针确认根域经 Cloudflare 返回 HTTP 200；Google 迁移后实时抓取成功，首页已收录，sitemap 读取成功并发现 10 个网址。用户最新即时迁移要求已替代原晚间排期，原 23:20 自动任务已删除。
 
 ## 已完成
 
@@ -12,27 +12,30 @@
 - 本轮验收：17 项测试、10 页、416 个内部路径／资源检查通过。Vercel 实际日志确认执行 `npm run build:verified`，GitHub CI 成功。
 - Search Console 域名属性 `sc-domain:chinesegenderpredictor.net` 已于 2026-10-09 00:11 在当前个人账号验证成功。新版 HTTPS sitemap 已提交，读取状态见下文；所有权验证不等于收录。属性内现存 HTTP sitemap 是历史记录（2014-08-26 提交、2019-01-02 最后读取、0 URL），不属于本次上线。
 - 2026-10-09 已检查 Search Console「人工处置」与「安全问题」，两项均显示「未检测到任何问题」。
-- Cloudflare Free zone 已创建，仍为 Pending；分配 NS 为 `ashley.ns.cloudflare.com`、`jeremy.ns.cloudflare.com`。当前权威 NS 仍是 `launch1.spaceship.net`、`launch2.spaceship.net`。
+- Cloudflare Free zone 已激活；Spaceship NS 已改为 `ashley.ns.cloudflare.com`、`jeremy.ns.cloudflare.com`，Google DoH 返回相同新 NS，Google 验证 TXT 保留。根域 A 与 www CNAME 均为 Proxied；不能据此认定所有递归缓存均已更新。
+- Cloudflare SSL/TLS 的 Full (strict) 已保存。Privacy 更新 `d2664e6` 已推送，Vercel 部署状态 success；文案包含 Cloudflare 处理普通网络请求、IP 与安全日志，同时保留日期／结果不上传和不做行为统计的边界。
 
-## 两侧均已保存的 DNS 记录
+## 当前 Cloudflare DNS 记录
 
 | 类型 | 主机 | 值 | 设置 |
 | --- | --- | --- | --- |
-| A | @ | `216.198.79.1` | Spaceship TTL 30 分钟；Cloudflare DNS only / Auto |
-| CNAME | www | `bf2432657c1d912c.vercel-dns-017.com` | Spaceship TTL 30 分钟；Cloudflare DNS only / Auto |
+| A | @ | `216.198.79.1` | Proxied / Auto；源站为 Vercel |
+| CNAME | www | `bf2432657c1d912c.vercel-dns-017.com` | Proxied / Auto；308 跳转根域 |
 | TXT | @ | `google-site-verification=rHIH8Uezi9gE1QQxhrO8xtJqhVzNX7_3LW3GeC6kmeQ` | Google 所有权验证记录；两侧均保留 |
 
-Google 和 Cloudflare 公共 DoH 均已查到验证 TXT。Cloudflare 目前共三条上述记录，未启用反向代理；没有配置邮箱。NS 切换前重新核对完整记录和 Vercel 目标，不只依赖本文历史值。
+Google 和 Cloudflare 公共 DoH 均已查到验证 TXT。Cloudflare 目前共三条上述记录；TXT 为 DNS only，网站记录开启反向代理，没有配置邮箱。Spaceship 原 DNS 记录保留作历史副本，权威 DNS 已由 Cloudflare 提供。后续修改前仍需核对完整记录和 Vercel 目标，不只依赖本文历史值。
 
-## DNSSEC 迁移窗口
+## Cloudflare／DNSSEC 迁移进度
 
 原 DS：key tag 50762、algorithm 13、digest type 2，观察到原 TTL 86400 秒。经用户明确批准，2026-10-08 23:03 前（保守记录）已在 Spaceship 关闭 DNSSEC。
 
-部分公共查询已无 DS，但 2026-10-08 23:43 审查仍观察到一个 Google 缓存节点保留旧 DS、TTL 18750 秒；不能据此认为全球缓存已经清空。当前站点 A／NS 查询和 HTTPS 正常，无已观察到的 SERVFAIL。
+2026-10-08 23:43 审查曾观察到一个 Google 缓存节点保留旧 DS、TTL 18750 秒，因此最初保守安排在 10 月 9 日 23:20 迁移。该记录仅描述历史状态。2026-10-09 07:45 后重新检查：Spaceship DNSSEC 页面显示已禁用，Google 与 Cloudflare 公共 DoH 均无旧 DS。
 
-不得早于 **2026-10-09 23:05（Asia/Shanghai）** 切换 NS。现有自动继续任务安排在 **2026-10-09 23:20**，需要电脑、应用和相关登录可用；执行前仍要复核解析。
+用户最新明确授权**现在迁移并开启 Cloudflare 橙云**，不必等到晚上，已替代原“不得早于 23:05”及“23:20 继续”的时间限制。Spaceship NS 已成功保存为 Cloudflare 分配值；07:49 Google DoH 已查到新 NS 和保留的 Google 验证 TXT。迁移验收完成后已删除 `chinese-gender-predictor-dns` 自动任务，今晚不再重复执行。
 
-迁移顺序：确认 Cloudflare 完整保留 A、CNAME 和 Google TXT；再切换 NS；待 Cloudflare Active 后启用其 DNSSEC，将实际新 DS 保存到 Spaceship，并验证信任链、解析和 HTTPS。A／CNAME 继续使用 DNS only。
+已依次确认 Cloudflare zone Active、Universal SSL 证书 Active、Full (strict)，再启用根域和 www 橙云。Cloudflare DNSSEC 已启用，新 DS 已成功保存到 Spaceship：key tag `2371`、algorithm `13`、digest type `2`、digest `C564D51E9609CD5D41D6AF23588F6FB7868F039D7DD37DE30A2EF6FA1D92C838`。Google 和 Cloudflare 公共 DoH 均返回此 DS 且 AD=true，无 SERVFAIL；Cloudflare DNS 页面显示 DNSSEC Success。部分本机域名路由缓存仍直达 Vercel，因此另用美国、德国远端探针确认实际代理，未修改本机代理设置。
+
+缓存级别为 Standard，Browser Cache TTL 为 Respect Existing Headers，源站 `public, max-age=0, must-revalidate` 得以保留；没有 Cache Everything 或强制长缓存规则。Rocket Loader、Web Analytics/RUM 与 Speed Brain 均关闭，HTTP/2、HTTP/3、TLS 1.3 保持启用。未添加缓存或改写 `/.well-known/vercel/*`、`/.well-known/acme-challenge/*` 的规则。
 
 参考：[Cloudflare DNSSEC](https://developers.cloudflare.com/dns/dnssec/) · [Vercel 与 Cloudflare](https://vercel.com/kb/guide/cloudflare-with-vercel)
 
@@ -40,8 +43,8 @@ Google 和 Cloudflare 公共 DoH 均已查到验证 TXT。Cloudflare 目前共�
 
 - 2026-10-08 首版生产环境通过 16 项 HTTP 检查，覆盖 8 页、canonical、index/follow、JSON-LD、robots、8 URL sitemap、资源、安全头、404 和跳转；浏览器 Boy／Girl 计算与重置正常。此结果属于旧版本。
 - 当晚 23:43 的[官方 PSI 首页报告](https://pagespeed.web.dev/analysis/https-chinesegenderpredictor-net/d2vifh7syr?form_factor=mobile)：移动性能 99，其余三项 100；LCP 1.9s、FCP 1.2s、TBT 20ms、CLS 0.001；桌面四项 100。CrUX 无数据。这是本轮改动前的实验室结果，已取代此前 API 429 所导致的“无报告”状态。
-- 本轮已执行 `npm run verify:live`，10 个页面及 6 份 PDF 通过检查；正式 sitemap 已被 Google 成功读取，仍需跟踪实际收录结果。
-- 今晚按上述窗口完成 Cloudflare／DNSSEC 迁移后，再跑线上复验。
+- 迁移后 `npm run verify:live` 19/19 通过，覆盖 10 个页面、6 份 PDF、资源、安全头、真实 404 和跳转。本机根域请求仍可受旧网络缓存影响；代理验收另由外部探针和 Google 实时抓取证明。
+- 08:00:33 美国 Buffalo 与德国 Falkenstein 探针均得到根域 HTTPS 200、`server: cloudflare`、`cf-cache-status: DYNAMIC`，TLS 1.3 证书验证通过。[原始回执](https://api.globalping.io/v1/measurements/21Vp3uPkyli2dkRb800021HX6)。这证明两地代理正常，不代表全球性能均已测量。
 
 ### 2026-10-09 发布更新
 
@@ -51,13 +54,14 @@ HTTPS sitemap 提交后最初显示“无法抓取”、发现 0 页；Google 00
 
 用户已选择先只用 Search Console 观察搜索词、展示和点击，不新增行为分析脚本。完整验收记录见 [QA](QA.md)。
 
-首页已成功请求编入索引并进入 Google 优先抓取队列；实际收录仍未确认。
+08:00 复查首页的存储索引报告显示“网址已收录到 Google／网页已编入索引”，Google 选定 canonical 为所检查的正式根域网址，最近一次 Googlebot 抓取为 2026-10-09 00:19:55。08:00:42 迁移后实时检查又显示“网址可编入 Google 索引”，抓取和索引许可均为“是”、网页抓取“成功”。未对已收录首页重复请求索引；其他页面收录仍待后续真实报告。
 
 管理入口：[Vercel Domains](https://vercel.com/simonhou/chinesegenderpredictor/settings/domains) · [Cloudflare DNS](https://dash.cloudflare.com/48086aaf656e35bbf0b6ea2a8ac7ea86/chinesegenderpredictor.net/dns/records) · [Spaceship DNS](https://www.spaceship.com/zh/application/advanced-dns-application/manage/chinesegenderpredictor.net/)
 
-## 迁移验收条件
+## 已通过的迁移验收条件
 
-- Cloudflare Active，公开 NS 与分配值一致，Google TXT 仍可查询。
+- Cloudflare zone 和 Universal SSL 证书均 Active，公开 NS 与分配值一致，Google TXT 仍可查询。
+- 根域和 www 均开启橙云，实际 HTTPS 响应可确认经过 Cloudflare；SSL/TLS 保持 Full (strict)。
 - 根域和 www 正确指向 Vercel，www 永久跳转根域；默认项目别名保持移除。
 - 新 DNSSEC 信任链有效，外部解析无 SERVFAIL，HTTPS 正常。
 - 正式 HTML index/follow、canonical 使用主域名；robots 和 10 URL sitemap 正常。

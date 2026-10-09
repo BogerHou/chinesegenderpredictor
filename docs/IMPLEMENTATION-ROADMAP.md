@@ -1,19 +1,19 @@
 # 实施路线
 
-更新日期：2026-10-09。本轮扩展至 10 页，工程、资料与生产验收完成。采用静态站、esbuild 与 lunar-javascript，GitHub 保存代码、Vercel 托管。
+更新日期：2026-10-09，08:00 验收完成（Asia/Shanghai）。本轮扩展至 10 页，工程、资料、生产部署与 Cloudflare 橙云迁移均已完成。采用静态站、esbuild 与 lunar-javascript，GitHub 保存代码、Vercel 托管、Cloudflare 提供 DNS 和代理。
 
 ## 本轮执行顺序与状态
 
 | 顺序 | 工作 | 当前状态与下一步 |
 | --- | --- | --- |
-| 1 | 上线与索引 | 自有域名上线、默认 Vercel 项目域名移除；Search Console 所有权已验证。07:40 确认 HTTPS sitemap 读取成功、发现 10 个网址；首页已请求索引，实际收录未确认 |
+| 1 | 上线与索引 | 自有域名上线、默认 Vercel 项目域名移除；Search Console 所有权已验证，HTTPS sitemap 读取成功并发现 10 个网址。08:00 确认首页已收录、Google canonical 正确；迁移后 Google 实时抓取成功 |
 | 2 | 功能与部署检查 | 生日错误聚焦已修复；日历加载失败／超时有重载恢复。17 项测试和 416 个内部路径检查通过；Vercel 和 GitHub 远程检查成功 |
 | 3 | 同义关键词与内链 | 主工具合并 predictor／calendar／chart／birth chart 意图，补充农历年龄入口、实际维护者、来源和分享图片；不新增同义词重复页 |
 | 4 | 年度图表与 PDF | 2026／2027 页面包含完整图表、实际月界和跨年案例；4 份年度 PDF 已核对并渲染验收 |
 | 5 | 可打印小游戏 | 独立 games 页面及预测卡、投票表、名字竞赛，A4／Letter 两份游戏 PDF 已渲染验收；不把宾客猜测当作医学结果 |
-| 6 | 发布与基础设施收尾 | 10 页、6 份 PDF、交互与 sitemap 公开访问已验；Cloudflare／DNSSEC 按 10 月 9 日 23:20 排期继续，不提前切 NS |
+| 6 | 发布与基础设施收尾 | Cloudflare 与边缘证书 Active，@／www 为 Proxied，Full (strict)，新 DS2371 的公共验证 AD=true；美国、德国外部请求确认经 Cloudflare 返回 HTTPS200。19 项线上检查通过；旧晚间自动任务已删除 |
 
-具体证据见 [QA](QA.md) 和 [部署记录](DEPLOYMENT.md)。6 份 PDF 共 14 页；本轮已发布，Google 收录和 DNSSEC 迁移仍待完成。
+具体证据见 [QA](QA.md) 和 [部署记录](DEPLOYMENT.md)。6 份 PDF 共 14 页，本轮已发布并完成迁移验收；首页收录已确认，其他页面及搜索表现按后续报告观察。用户最新授权已替代旧晚间排期和 DNS only 最终方案。Privacy 更新 `d2664e6` 已推送且 Vercel 状态 success，补充 Cloudflare 网络请求处理说明，不新增行为统计。
 
 ## 上线后 1 至 4 周
 
