@@ -165,23 +165,22 @@ def reference_page(c, size, year, format_name):
         text(c, str(record["year"]), columns[1], y + 5, 8.4, align="center")
         text(c, str(record["month"]) + (" (leap)" if record["leap"] else ""), columns[2], y + 5, 8.4, True, align="right")
     y = top - head_h - len(records) * row_h - 13
-    y = paragraph(c, "The first and last rows are clipped to January 1 and December 31. The same lunar month continues across the year boundary. "
+    y = paragraph(c, f"Only dates within {year} are listed. The first and last lunar months continue outside this calendar year. "
                   "There is no leap lunar month in the date ranges shown.", left, y, width, 8, 11)
     y -= 18
     text(c, "Before you choose a row", left, y, 11, True)
     y = paragraph(c, "<b>Lunar age:</b> conception lunar year minus birth lunar year plus one. It changes at Lunar New Year, "
                   "so simply adding one to your current age may be wrong.<br/>"
                   "<b>Due dates:</b> our calculator estimates conception as due date minus 266 days. That is an estimate; "
-                  "dates near a lunar-month boundary can change the chart result.<br/>"
-                  "<b>Leap-month convention:</b> our tool uses the same numbered month. Other versions may use another rule.",
+                  "dates near the start or end of a lunar month can change the chart result.<br/>"
+                  "<b>Leap lunar months:</b> our calculator uses the same numbered month. Other charts may use another rule.",
                   left, y - 10, width, 8.3, 12)
     y -= 18
-    text(c, "Sources and version", left, y, 10, True)
-    y = paragraph(c, "Gregorian/lunar conversion: lunar-javascript, checked against Hong Kong Observatory annual tables. "
-                  f"HKO reference: hko.gov.hk/en/gts/time/calendar/pdf/files/{year}e.pdf<br/>"
-                  "Chart: github.com/bdp-raymon/chinese-gender-prediction, revision 8c5338d.<br/>"
-                  f"Chart version: {DATA['version']}. Prepared {RELEASE}.<br/>"
-                  "Methods and evidence: chinesegenderpredictor.net/how-it-works/ and /accuracy/.", left, y - 10, width, 7.3, 10)
+    text(c, "Calendar references", left, y, 10, True)
+    y = paragraph(c, "Gregorian/lunar date reference: Hong Kong Observatory annual calendar.<br/>"
+                  f"hko.gov.hk/en/gts/time/calendar/pdf/files/{year}e.pdf<br/>"
+                  "Traditional chart source: github.com/bdp-raymon/chinese-gender-prediction.<br/>"
+                  "Read more: chinesegenderpredictor.net/how-it-works/ and /accuracy/.", left, y - 10, width, 7.3, 10)
     y -= 15
     text(c, "Chart attribution and permission", left, y, 8, True)
     y = paragraph(c, "MIT License. Copyright (c) Ali Shabani. Permission is hereby granted, free of charge, to any person obtaining "
@@ -537,6 +536,8 @@ def main():
             for year in (2026, 2027):
                 path = OUT / f"chinese-gender-calendar-{year}-{slug}.pdf"
                 c = new_pdf(path, size, f"Chinese Gender Calendar {year} - {format_name}")
+                c.setAuthor("Chinese Gender Predictor")
+                c.setCreator("Chinese Gender Predictor")
                 chart_page(c, size, year, format_name)
                 reference_page(c, size, year, format_name)
                 c.save()
