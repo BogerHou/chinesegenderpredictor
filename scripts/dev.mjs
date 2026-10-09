@@ -5,7 +5,7 @@ if (!process.argv.includes('--no-build')) await import('./build.mjs');
 const root = path.resolve('dist');
 const vercel = JSON.parse(await readFile('vercel.json','utf8'));
 const securityHeaders = Object.fromEntries(vercel.headers[0].headers.map(({key,value})=>[key,value]));
-const types = {'.html':'text/html; charset=utf-8','.css':'text/css','.js':'text/javascript','.svg':'image/svg+xml','.jpg':'image/jpeg','.woff2':'font/woff2','.xml':'application/xml','.txt':'text/plain'};
+const types = {'.html':'text/html; charset=utf-8','.css':'text/css','.js':'text/javascript','.svg':'image/svg+xml','.jpg':'image/jpeg','.png':'image/png','.pdf':'application/pdf','.woff2':'font/woff2','.xml':'application/xml','.txt':'text/plain'};
 const server = http.createServer(async (req,res) => {
   try {
     const url = new URL(req.url,'http://localhost');

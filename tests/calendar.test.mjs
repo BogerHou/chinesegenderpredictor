@@ -30,6 +30,8 @@ const officialDates = [
   ['2025-08-23', 2025, 7, 1, false],
   ['2026-02-16', 2025, 12, 29, false],
   ['2026-02-17', 2026, 1, 1, false],
+  ['2026-05-16', 2026, 3, 30, false],
+  ['2026-05-17', 2026, 4, 1, false],
   ['2027-02-05', 2026, 12, 29, false],
   ['2027-02-06', 2027, 1, 1, false],
   ['2027-08-31', 2027, 7, 30, false],
@@ -50,6 +52,23 @@ test('lunar age changes at Chinese New Year, before the Gregorian birthday', () 
   assert.equal(lunarAge(birth, '2026-02-17').age, 27);
   assert.equal(lunarAge(birth, '2026-12-30').age, 27);
   assert.equal(lunarAge(birth, '2026-12-31').age, 27, 'birthday adds no second year');
+});
+
+test('Gregorian age comparison changes at the birthday independently of lunar age', () => {
+  const birth='2000-06-01';
+  assert.equal(lunarAge(birth,'2000-06-01').gregorianAge,0);
+  assert.deepEqual([lunarAge(birth,'2026-02-16').gregorianAge,lunarAge(birth,'2026-02-16').age],[25,26]);
+  assert.deepEqual([lunarAge(birth,'2026-02-17').gregorianAge,lunarAge(birth,'2026-02-17').age],[25,27]);
+  assert.equal(lunarAge(birth,'2026-05-31').gregorianAge,25);
+  assert.equal(lunarAge(birth,'2026-06-01').gregorianAge,26);
+  assert.equal(lunarAge(birth,'2026-06-02').gregorianAge,26);
+});
+
+test('February 29 comparisons use the stated March 1 boundary in non-leap years', () => {
+  assert.equal(lunarAge('2000-02-29','2026-02-28').gregorianAge,25);
+  assert.equal(lunarAge('2000-02-29','2026-03-01').gregorianAge,26);
+  assert.equal(lunarAge('2000-02-29','2024-02-28').gregorianAge,23);
+  assert.equal(lunarAge('2000-02-29','2024-02-29').gregorianAge,24);
 });
 
 test('births before Chinese New Year belong to the preceding lunar year', () => {

@@ -11,6 +11,7 @@ The chart is folklore for entertainment. It is not a medical prediction and has 
 - [Chinese gender calendar 2026](https://chinesegenderpredictor.net/chinese-gender-calendar-2026/)
 - [Chinese gender calendar 2027](https://chinesegenderpredictor.net/chinese-gender-calendar-2027/)
 - [Free printable gender reveal games](https://chinesegenderpredictor.net/gender-reveal-games/)
+- [Old wives' tales and printable guessing game](https://chinesegenderpredictor.net/old-wives-tales-gender-prediction/)
 - [Calculation method and chart source](https://chinesegenderpredictor.net/how-it-works/)
 - [Research on prediction accuracy](https://chinesegenderpredictor.net/accuracy/)
 
@@ -19,7 +20,10 @@ The chart is folklore for entertainment. It is not a medical prediction and has 
 - Automatic Gregorian-to-lunar conversion with a disclosed leap-month convention.
 - Conception-date and estimated due-date modes.
 - An accessible chart, selected-cell highlighting and print styles.
-- Complete 2026 and 2027 calendar PDFs in A4 and US Letter, plus three original printable party games.
+- Lunar age and completed Gregorian age shown together for the same date, with worked Lunar New Year examples.
+- Complete 2026 and 2027 calendar PDFs in A4 and US Letter, plus five original printable party games: prediction cards, team vote, name race, eight different Bingo cards and a word scramble with answers.
+- Individual game downloads, a nine-page party kit and a blank folklore guessing sheet in both paper sizes. The site includes 18 PDFs with 46 pages in total.
+- A sourced old wives' tales guide that separates entertainment from scientific evidence.
 - Responsive layouts, a warm light theme, self-hosted fonts and images.
 - Date calculations happen in the browser. Input dates are not sent to a server or included in share links.
 
@@ -38,7 +42,9 @@ Open http://127.0.0.1:4321/. Run `npm test`, `npm run build` and `npm run check`
 
 Import this repository into Vercel. The checked-in `vercel.json` configures the static build and response headers. Set `SITE_URL=https://chinesegenderpredictor.net` in the Production environment. Preview builds remain noindex.
 
-Cloudflare DNS migration is scheduled for October 9, 2026 after the DNSSEC cache safety window; web records use DNS-only mode and the destinations supplied by the Vercel project. Spaceship remains the domain registrar.
+Cloudflare provides authoritative DNS and proxying for the root domain and www. Full (strict) HTTPS and DNSSEC were verified on October 9, 2026; Spaceship remains the domain registrar. The default `.vercel.app` project domain is removed, and www redirects to the root domain.
+
+The next content revision is implemented and passes the local verified build: 19 tests, 11 pages and 518 internal paths/assets. Its production deployment and browser acceptance are tracked separately in the [QA record](docs/QA.md).
 
 [中文开发与部署说明](docs/DEVELOPMENT.md) · [QA record](docs/QA.md)
 

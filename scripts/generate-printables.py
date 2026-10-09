@@ -3,15 +3,19 @@
 
 Prerequisites: npm ci; Python packages reportlab and Pillow; Poppler pdftoppm.
 Run: python3 scripts/generate-printables.py
+Games only: python3 scripts/generate-printables.py --only games folklore
 Override NODE or PDFTOPPM when these executables are not on PATH.
-All PDF data comes from the same modules used by the website. Generated files
-are checked in, so normal website builds do not require Python or Poppler.
+Calendar data comes from the same modules used by the website. Original party
+game data is defined here. Generated files are checked in, so normal website
+builds do not require Python or Poppler.
 """
 
 from datetime import date
 from pathlib import Path
+import argparse
 import json
 import os
+import random
 import shutil
 import subprocess
 import tempfile
@@ -203,7 +207,7 @@ def checkbox(c, x, y, label):
     text(c, label, x + 13, y, 9)
 
 
-def cards_page(c, size, format_name):
+def cards_page(c, size, format_name, page=1, total=1):
     w, h = size
     header(c, w, h, "Printable game 01 / 3-5 minutes", "A little guess, a little wish", "One card per guest. Choose Boy, Girl or Surprise, add your name and an optional message. Cut along the outlines.")
     left, gutter, card_top = 38, 16, h - 135
@@ -232,11 +236,11 @@ def cards_page(c, size, format_name):
         text(c, WEBSITE + " / just for fun", x + 18, top - card_h + 13, 5.7, fill=MUTED)
     paragraph(c, "These are party guesses, not a confirmed reveal. Save the cards as keepsakes, or share the guesses only if the family wants to.",
               38, 80, w - 76, 8.4, 12, MUTED)
-    footer(c, w, 1, 3, f"{format_name} / personal, noncommercial events")
+    footer(c, w, page, total, f"{format_name} / personal, noncommercial events")
     c.showPage()
 
 
-def votes_page(c, size, format_name):
+def votes_page(c, size, format_name, page=1, total=1):
     w, h = size
     header(c, w, h, "Printable game 02 / 5 minutes", "What is your little guess?", "Use one shared sheet. Each guest writes their name and marks one column. Count each guest once; Surprise votes count too.")
     left, width, top = 38, w - 76, h - 133
@@ -268,11 +272,11 @@ def votes_page(c, size, format_name):
         line(c, x + 6, y - 23, x + option_w - 6)
     paragraph(c, "The result is a guest poll, not a way to determine a baby's sex. There is no right or wrong choice before a confirmed reveal. "
               "For a larger party, print extra sheets and combine the totals.", 38, y - 43, width, 8.4, 12, MUTED)
-    footer(c, w, 2, 3, f"{format_name} / personal, noncommercial events")
+    footer(c, w, page, total, f"{format_name} / personal, noncommercial events")
     c.showPage()
 
 
-def names_page(c, size, format_name):
+def names_page(c, size, format_name, page=1, total=1):
     w, h = size
     header(c, w, h, "Printable game 03 / 3 minutes", "The A-to-Z baby-name race", "One sheet per player. Write one baby name for each letter before time runs out. Any name is welcome; no boy/girl categories needed.")
     text(c, "Player", 38, h - 137, 9, True)
@@ -293,7 +297,169 @@ def names_page(c, size, format_name):
     paragraph(c, "Print at 100% / Actual size. Original game sheets by Chinese Gender Predictor. "
               "You may print and share them at personal, noncommercial events. Please keep the website credit; do not resell these sheets.",
               38, y - 22, w - 76, 8, 11, MUTED)
-    footer(c, w, 3, 3, f"{format_name} / personal, noncommercial events")
+    footer(c, w, page, total, f"{format_name} / personal, noncommercial events")
+    c.showPage()
+
+
+BINGO_MOMENTS = (
+    'A guest says "tiny"', 'A guest wears pink', 'A guest wears blue',
+    'Someone mentions naps', 'Someone brings a card', 'A family photo is taken',
+    'Someone shares a name idea', 'Someone says "congrats"', 'A gift has a bow',
+    'A guest asks for a photo', 'Someone offers to help', 'Two guests hug',
+    'A toast is made', 'Someone laughs', 'A snack is shared',
+    'Someone says "little one"', 'A guest takes a selfie', 'Someone spots balloons',
+    'A guest refills a drink', 'Someone mentions a lullaby', 'A friend waves hello',
+    'Someone shares a kind wish', 'A guest joins a game', 'Someone admires decor',
+)
+SCRAMBLE_WORDS = ("BABY", "PARTY", "BALLOON", "CRADLE", "FAMILY", "LULLABY",
+                  "DIAPER", "STROLLER", "KEEPSAKE", "SURPRISE")
+FOLKLORE_LABELS = ("Food cravings", "Bump shape", "Heart rate", "Morning sickness",
+                   "Skin changes", "Hair changes", "Ring swing", "Chinese calendar")
+
+
+def game_data():
+    """Fixed original card arrangements; no prediction or private data involved."""
+    rng = random.Random(20261009)
+    boards = []
+    for _ in range(8):
+        shuffled = list(BINGO_MOMENTS)
+        rng.shuffle(shuffled)
+        shuffled.insert(12, "FREE SPACE")
+        boards.append(tuple(shuffled))
+    scrambled = []
+    for answer in SCRAMBLE_WORDS:
+        chars = list(answer)
+        while True:
+            rng.shuffle(chars)
+            puzzle = "".join(chars)
+            if puzzle != answer:
+                break
+        scrambled.append((puzzle, answer))
+    if len(set(boards)) != 8:
+        raise ValueError("Bingo cards must have eight different arrangements")
+    for board in boards:
+        if board[12] != "FREE SPACE" or set(board) - {"FREE SPACE"} != set(BINGO_MOMENTS):
+            raise ValueError("Bingo card has missing or duplicate moments")
+    for puzzle, answer in scrambled:
+        if puzzle == answer or sorted(puzzle) != sorted(answer):
+            raise ValueError("Scramble letters do not match the answer")
+    return tuple(boards), tuple(scrambled)
+
+
+BINGO_BOARDS, WORD_SCRAMBLES = game_data()
+
+
+def bingo_page(c, size, format_name, card_offset, page=1, total=4):
+    w, h = size
+    header(c, w, h, "Printable game 04 / during the party", "Little moments bingo",
+           "Give each player a different card. Mark moments you notice; the center is free. Five in a row, column or diagonal wins. Ties share the win.")
+    left, width, gap = 38, w - 76, 16
+    card_h = (h - 202) / 2
+    for slot in range(2):
+        index = card_offset + slot
+        top = h - 130 - slot * (card_h + gap)
+        bottom = top - card_h
+        c.setStrokeColor(color(LINE))
+        c.setLineWidth(.8)
+        c.roundRect(left, bottom, width, card_h, 8, fill=0, stroke=1)
+        text(c, f"CARD {index + 1:02}", left + 13, top - 20, 9, True, ROSE if slot == 0 else BLUE)
+        text(c, "Player", left + 105, top - 20, 8, fill=MUTED)
+        line(c, left + 144, top - 23, left + width - 13)
+        grid_top = top - 59
+        cell_w, cell_h = (width - 26) / 5, (card_h - 82) / 5
+        for col, label in enumerate("BINGO"):
+            text(c, label, left + 13 + (col + .5) * cell_w, top - 46, 9, True, INK, "center")
+        for cell, label in enumerate(BINGO_BOARDS[index]):
+            col, row = cell % 5, cell // 5
+            x, y = left + 13 + col * cell_w, grid_top - (row + 1) * cell_h
+            c.setFillColor(color(BLUE_BG if cell == 12 else (BG if (row + col) % 2 == 0 else "#ffffff")))
+            c.setStrokeColor(color(LINE))
+            c.setLineWidth(.5)
+            c.rect(x, y, cell_w, cell_h, fill=1, stroke=1)
+            style = ParagraphStyle("bingo", fontName="VeraBold" if cell == 12 else "Vera",
+                                   fontSize=7.1, leading=9.2, textColor=color(BLUE if cell == 12 else INK), alignment=1)
+            p = Paragraph(label, style)
+            _, label_h = p.wrap(cell_w - 10, cell_h)
+            if label_h > cell_h - 6:
+                raise ValueError(f"Bingo cell overflow: {label}")
+            p.drawOn(c, x + 5, y + (cell_h - label_h) / 2)
+        text(c, "Party observations only. No baby-sex clues or confirmed results.", left + 13, bottom + 9, 6.1, fill=MUTED)
+    footer(c, w, page, total, f"{format_name} / personal, noncommercial events")
+    c.showPage()
+
+
+def scramble_page(c, size, format_name, answers=False, page=1, total=2):
+    w, h = size
+    title = "Word scramble: host answer key" if answers else "Baby-party word scramble"
+    subtitle = ("Keep this page with the host. Check spelling against the answers below; each completed word is worth one point."
+                if answers else "One sheet per player. Unscramble these ten baby-party words in five minutes. The host keeps the answer page separate.")
+    header(c, w, h, "Printable game 05 / 5 minutes", title, subtitle)
+    if answers:
+        text(c, "10 words / 10 possible points", 38, h - 137, 9, True, ROSE)
+    else:
+        text(c, "Player", 38, h - 137, 9, True)
+        line(c, 79, h - 140, w * .6)
+        text(c, "Score", w - 143, h - 137, 9, True)
+        line(c, w - 105, h - 140, w - 38)
+    left, width, top, row_h = 38, w - 76, h - 171, 41
+    c.setFillColor(color(INK))
+    c.rect(left, top - 26, width, 26, fill=1, stroke=0)
+    text(c, "MIXED-UP WORD", left + 34, top - 17, 8, True, "#ffffff")
+    text(c, "ANSWER" if answers else "YOUR WORD", left + width * .52, top - 17, 8, True, "#ffffff")
+    for index, (puzzle, answer) in enumerate(WORD_SCRAMBLES):
+        y = top - 26 - (index + 1) * row_h
+        c.setFillColor(color(BG if index % 2 == 0 else "#ffffff"))
+        c.rect(left, y, width, row_h, fill=1, stroke=0)
+        text(c, f"{index + 1:02}", left + 9, y + 15, 7.5, fill=MUTED)
+        text(c, puzzle, left + 34, y + 13, 12, True, ROSE if index % 2 == 0 else BLUE)
+        if answers:
+            text(c, answer, left + width * .52, y + 13, 12, True)
+        else:
+            line(c, left + width * .52, y + 10, left + width - 13)
+    y = top - 26 - len(WORD_SCRAMBLES) * row_h - 26
+    text(c, "How to score", left, y, 11, True)
+    y = paragraph(c, "Award one point per correct word. The most points wins; tied players share the win. "
+                  "For a relaxed game, work together and skip the timer.", left, y - 10, width, 9, 14)
+    paragraph(c, "This is a word puzzle, not a way to determine a baby's sex. Print at 100% / Actual size. "
+              "Original game sheets for personal, noncommercial events; please keep the website credit and do not resell.",
+              left, y - 17, width, 8, 11, MUTED)
+    footer(c, w, page, total, f"{format_name} / personal, noncommercial events")
+    c.showPage()
+
+
+def folklore_page(c, size, format_name):
+    w, h = size
+    header(c, w, h, "Optional folklore party game", "Old wives' tales: party guesses",
+           "These observations do not establish a baby's sex. Skip any row. No dates, medical values or personal details are needed.")
+    left, width, top, row_h = 38, w - 76, h - 136, 53
+    label_w, observation_w, head_h = 130, (width - 130) * .62, 31
+    c.setFillColor(color(INK))
+    c.rect(left, top - head_h, width, head_h, fill=1, stroke=0)
+    for label, x in (("FOLKLORE TOPIC", left + 11), ("OPTIONAL OBSERVATION", left + label_w + 11),
+                     ("FOLK GUESS", left + label_w + observation_w + 11)):
+        text(c, label, x, top - 19, 7, True, "#ffffff")
+    for index, label in enumerate(FOLKLORE_LABELS):
+        y = top - head_h - (index + 1) * row_h
+        c.setFillColor(color(BG if index % 2 == 0 else "#ffffff"))
+        c.rect(left, y, width, row_h, fill=1, stroke=0)
+        text(c, label, left + 11, y + 21, 8.5, True)
+        for x, end in ((left + label_w + 11, left + label_w + observation_w - 11),
+                       (left + label_w + observation_w + 11, left + width - 11)):
+            line(c, x, y + 17, end)
+        line(c, left, y, left + width)
+    for x in (left, left + label_w, left + label_w + observation_w, left + width):
+        c.setStrokeColor(color(LINE))
+        c.line(x, top - head_h, x, top - head_h - len(FOLKLORE_LABELS) * row_h)
+    y = top - head_h - len(FOLKLORE_LABELS) * row_h - 29
+    text(c, "Actual reveal (optional)", left, y, 9, True)
+    line(c, left + 153, y - 3, left + width)
+    y = paragraph(c, "<b>Just for fun, not evidence.</b> Leave every field blank if you prefer. This sheet does not provide "
+                  "a medical prediction. Do not perform body tests or ask anyone to disclose health information. "
+                  "For a ring-swing guess, use a prop on the table; do not suspend objects over a person.",
+                  left, y - 17, width, 8.2, 12, MUTED)
+    if y < 55:
+        raise ValueError(f"Folklore instructions overlap footer: {format_name}, {y}")
+    footer(c, w, 1, 1, f"{format_name} / personal, noncommercial events")
     c.showPage()
 
 
@@ -326,7 +492,7 @@ def social_card():
     im.resize((1200, 630), Image.Resampling.LANCZOS).save(ASSETS / "social-preview.png", optimize=True)
 
 
-def previews():
+def previews(groups):
     binary = os.environ.get("PDFTOPPM") or shutil.which("pdftoppm")
     if not binary:
         raise RuntimeError("Set PDFTOPPM to your pdftoppm executable to generate the page previews.")
@@ -334,9 +500,15 @@ def previews():
     temp_root.mkdir(parents=True, exist_ok=True)
     with tempfile.TemporaryDirectory(prefix="printables-", dir=temp_root) as tmp:
         tmp = Path(tmp)
-        items = [("gender-reveal-games-a4", 1, "games-prediction-cards-preview"),
-                 ("gender-reveal-games-a4", 2, "games-vote-sheet-preview"),
-                 ("gender-reveal-games-a4", 3, "games-name-race-preview")]
+        items = []
+        if "games" in groups:
+            items += [("gender-reveal-games-a4", 1, "games-prediction-cards-preview"),
+                      ("gender-reveal-games-a4", 2, "games-team-vote-preview"),
+                      ("gender-reveal-games-a4", 3, "games-name-race-preview"),
+                      ("gender-reveal-games-a4", 4, "games-bingo-preview"),
+                      ("gender-reveal-games-a4", 8, "games-word-scramble-preview")]
+        if "folklore" in groups:
+            items += [("old-wives-tales-game-a4", 1, "games-old-wives-tales-preview")]
         for pdf, page, name in items:
             prefix = tmp / name
             subprocess.run([binary, "-f", str(page), "-l", str(page), "-singlefile", "-r", "85", "-png", str(OUT / (pdf + ".pdf")), str(prefix)], check=True)
@@ -351,25 +523,65 @@ def previews():
 
 
 def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--only", choices=("calendars", "games", "folklore", "social"), nargs="+",
+                        help="Generate selected resource groups; omit to generate all.")
+    args = parser.parse_args()
+    groups = set(args.only or ("calendars", "games", "folklore", "social"))
     OUT.mkdir(parents=True, exist_ok=True)
     ASSETS.mkdir(parents=True, exist_ok=True)
+    generated = 0
     for format_name, size in (("A4", A4), ("Letter", letter)):
         slug = format_name.lower()
-        for year in (2026, 2027):
-            path = OUT / f"chinese-gender-calendar-{year}-{slug}.pdf"
-            c = new_pdf(path, size, f"Chinese Gender Calendar {year} - {format_name}")
-            chart_page(c, size, year, format_name)
-            reference_page(c, size, year, format_name)
+        if "calendars" in groups:
+            for year in (2026, 2027):
+                path = OUT / f"chinese-gender-calendar-{year}-{slug}.pdf"
+                c = new_pdf(path, size, f"Chinese Gender Calendar {year} - {format_name}")
+                chart_page(c, size, year, format_name)
+                reference_page(c, size, year, format_name)
+                c.save()
+                generated += 1
+        if "games" in groups:
+            path = OUT / f"gender-reveal-games-{slug}.pdf"
+            c = new_pdf(path, size, f"Five Printable Gender Reveal Games - {format_name}")
+            cards_page(c, size, format_name, 1, 9)
+            votes_page(c, size, format_name, 2, 9)
+            names_page(c, size, format_name, 3, 9)
+            for index in range(4):
+                bingo_page(c, size, format_name, index * 2, index + 4, 9)
+            scramble_page(c, size, format_name, False, 8, 9)
+            scramble_page(c, size, format_name, True, 9, 9)
             c.save()
-        path = OUT / f"gender-reveal-games-{slug}.pdf"
-        c = new_pdf(path, size, f"Three Printable Gender Reveal Games - {format_name}")
-        cards_page(c, size, format_name)
-        votes_page(c, size, format_name)
-        names_page(c, size, format_name)
-        c.save()
-    social_card()
-    previews()
-    print("Generated 6 PDFs, 3 page previews and a 1200x630 social image.")
+            generated += 1
+            for name, title, render in (("prediction-cards", "Prediction Cards", cards_page),
+                                        ("team-vote", "Team Vote", votes_page),
+                                        ("name-race", "A-to-Z Name Race", names_page)):
+                c = new_pdf(OUT / f"gender-reveal-{name}-{slug}.pdf", size, f"Gender Reveal {title} - {format_name}")
+                render(c, size, format_name)
+                c.save()
+                generated += 1
+            c = new_pdf(OUT / f"gender-reveal-bingo-{slug}.pdf", size, f"Eight Gender Reveal Party Bingo Cards - {format_name}")
+            for index in range(4):
+                bingo_page(c, size, format_name, index * 2, index + 1, 4)
+            c.save()
+            generated += 1
+            c = new_pdf(OUT / f"gender-reveal-word-scramble-{slug}.pdf", size, f"Gender Reveal Word Scramble and Answer Key - {format_name}")
+            scramble_page(c, size, format_name, False, 1, 2)
+            scramble_page(c, size, format_name, True, 2, 2)
+            c.save()
+            generated += 1
+        if "folklore" in groups:
+            c = new_pdf(OUT / f"old-wives-tales-game-{slug}.pdf", size, f"Old Wives' Tales Party Guessing Sheet - {format_name}")
+            folklore_page(c, size, format_name)
+            c.save()
+            generated += 1
+    if "social" in groups:
+        social_card()
+    if groups & {"games", "folklore"}:
+        previews(groups)
+    preview_count = (5 if "games" in groups else 0) + (1 if "folklore" in groups else 0)
+    print(f"Generated {generated} PDFs, {preview_count} page previews" +
+          (" and a 1200x630 social image." if "social" in groups else "."))
 
 
 if __name__ == "__main__":

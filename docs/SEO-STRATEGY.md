@@ -2,6 +2,8 @@
 
 核验日期：2026-10-08。定位：面向英语用户的 Chinese Gender Predictor 民俗娱乐工具。工程约束：静态站，esbuild + lunar，部署至 Vercel。
 
+本文保留首发8页的历史策略，不代表当前完成状态。2026-10-09的关键词估算见 [机会方案](SEO-OPPORTUNITIES-2026-10-09.md)，当前11页内容版本及部署进度见 [实施路线](IMPLEMENTATION-ROADMAP.md)。Search Console所有权与首页收录已验证；用户选择只用Search Console，原文中的工具事件统计、GA4及广告设想尚未实施。
+
 ## 目标与依据
 
 首页名称与主关键词统一为 **Chinese Gender Predictor**；Chinese Gender Calendar、Chinese Gender Chart、Chinese Birth Chart 作为同一搜索意图的自然表达，由首页一起承接，不另建同义词落地页。

@@ -20,9 +20,14 @@ export function dateString(date) { return date.toISOString().slice(0,10); }
 export function addDays(value,days) { const {date}=parseDate(value); date.setUTCDate(date.getUTCDate()+days); return dateString(date); }
 export function lunarDate(value) { const {y,m,d}=parseDate(value);const l=Solar.fromYmd(y,m,d).getLunar();return {year:l.getYear(),month:Math.abs(l.getMonth()),day:l.getDay(),leap:l.getMonth()<0}; }
 export function lunarAge(birth,target) {
-  if(parseInput(birth,'birth').date>parseInput(target,'target').date) throw new CalendarInputError('Your birth date must be before the selected date.','birth');
+  const birthDate=parseInput(birth,'birth'), targetDate=parseInput(target,'target');
+  if(birthDate.date>targetDate.date) throw new CalendarInputError('Your birth date must be before the selected date.','birth');
   const born=lunarDate(birth), at=lunarDate(target);
-  return {age:at.year-born.year+1,born,at};
+  // Completed calendar years change on the Gregorian birthday, independently
+  // of the Chinese New Year boundary used by the traditional age convention.
+  const beforeBirthday=targetDate.m<birthDate.m||(targetDate.m===birthDate.m&&targetDate.d<birthDate.d);
+  const gregorianAge=targetDate.y-birthDate.y-Number(beforeBirthday);
+  return {age:at.year-born.year+1,gregorianAge,born,at};
 }
 export function predict(birth,input,mode='conception') {
   if(!['conception','due'].includes(mode)) throw new Error('Choose conception date or due date.');
