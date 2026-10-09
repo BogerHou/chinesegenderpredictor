@@ -2,6 +2,16 @@
 
 更新日期：2026-10-09（Asia/Shanghai）。11页网站的品质升级、响应式网页资产优化与正式域名验收已完成。下面保留第二轮内容、首版、上一轮10页版本和08:00 Cloudflare迁移的历史证据。DNS／HTTPS状态见 [部署记录](DEPLOYMENT.md)。
 
+## 2026-10-09 FAQ 搜索需求整合
+
+使用用户的 Semrush 工具站，核对美国 Questions／Broad match 数据，筛选 26 个问题词；搜索量估算与 KD、指标时间逐行复核。首页由 6 问扩至 9 问，同义问题合并，详细回答分配到方法、年龄、准确性及两个年度页。调研方法与边界见 [FAQ 调研](FAQ-RESEARCH-2026-10-09.md)。公开页面保持自然英文，不展示搜索量或内部策略。
+
+23 项测试、11 页构建及 606 条内部路径／资源通过。Chrome 实测键盘展开、使用步骤链接及受孕月份链接；手机 FAQ 原有两列层叠问题已修正，390×844 下问答宽 331px，页面可用宽与 scrollWidth 均为 375px，无中文。桌面保留两列，控制台无 error／warn。正式域名实测 9 问、手机单列及展开答案。
+
+功能提交 [`18fc2ca`](https://github.com/BogerHou/chinesegenderpredictor/commit/18fc2caee527fd86d817bf396b3f447562c5a14c)，[GitHub CI](https://github.com/BogerHou/chinesegenderpredictor/actions/runs/37907737023) 成功，[Vercel 部署](https://vercel.com/simonhou/chinesegenderpredictor/88pEzScRyRxs5H7YTzpXZ9fiZanZ) success。正式域名 20/20 检查通过，50 项静态资源可用；6 个修改页面和 CSS 共 7 项响应 SHA256 与本地构建一致。默认项目 Vercel 域名仍 404。没有新增页面、PDF、统计脚本或收录承诺。
+
+本轮仅保留私有原始问题表、生产检查日志、7 项响应比对和一张手机上线截图。唯一验收标签页已关闭，临时视口已恢复；复用的用户 Semrush 标签页已恢复到原先的 crochet yarn calculator 查询并保留，其他用户标签页未操作。
+
 ## 2026-10-09 英文日期与访客文案修正
 
 用户指出中文Chrome显示“年月日”，以及部分文案仍像内部设计说明。此前验收漏掉了这两项，现已修正：两个工具改为显式英文Month／Day／Year，11页公开文案改成实际访客能理解的表达。23项测试、11页和596条内部路径／资源通过；正式域名检查通过。四份年度PDF的访客来源说明也已修改并发布，八页重新渲染，矩阵、日期表、纸张规格、页数及完整MIT许可不变；最终11页HTML、CSS／client.js及4份PDF共17项线上响应与本地一致。实际中文Chrome检查了手动输入、Enter、无效日期、年份范围、due切换、example、reset、闰日生日与手机／平板／窄桌面；控制台无error/warn。完整过程及发布回执见 [产品修正记录](DESIGN-QUALITY-2026-10-09.md)。8张PDF中间图已移入废纸篓，保留两张规格拼图和最终验收记录；预览服务、任务标签页和临时视口已清理。

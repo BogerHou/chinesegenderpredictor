@@ -1,5 +1,9 @@
 # 部署记录
 
+## 2026-10-09 FAQ 整合发布
+
+[`18fc2ca`](https://github.com/BogerHou/chinesegenderpredictor/commit/18fc2caee527fd86d817bf396b3f447562c5a14c) 已发布：[GitHub CI](https://github.com/BogerHou/chinesegenderpredictor/actions/runs/37907737023) 成功，[Vercel](https://vercel.com/simonhou/chinesegenderpredictor/88pEzScRyRxs5H7YTzpXZ9fiZanZ) 状态 success。首页 9 个 FAQ、方法／年龄／年度／准确性补充回答和手机 FAQ 单列修正在正式域名生效。20/20 生产检查通过，50 项静态资源正常；6 个页面和 CSS 与本地构建逐字节一致。默认 Vercel 项目域名仍 404，基础设施与 Search Console 测量范围保持既有配置。
+
 状态更新：2026-10-09（Asia/Shanghai）。11页网站的设计与体验升级已发布，GitHub CI、Vercel部署、Chrome浏览器及正式域名20项检查均已通过。此前08:00的10页生产版本及Cloudflare迁移已完成验收：橙云、严格HTTPS与新DNSSEC信任链均已启用，美国及德国外部探针确认代理HTTP 200；Google当时确认首页已收录、sitemap读取成功并发现10个网址。用户即时迁移要求已替代原晚间排期，原23:20自动任务已删除。
 
 ## 英文日期与产品文案修正已发布
