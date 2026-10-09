@@ -20,7 +20,9 @@ for(const [route] of routes){
  assert.equal(new Set(ids).size,ids.length,`${route}: unique element IDs`);
  assert(!/[—–]/.test(html),`${route}: copy uses plain punctuation`);
  for(const match of html.matchAll(/<script type="application\/ld\+json">(.*?)<\/script>/gs))JSON.parse(match[1]);
- for(const [,href] of html.matchAll(/(?:href|src)="([^"<>]+)"/g)){
+ const references=[...html.matchAll(/(?:href|src)="([^"<>]+)"/g)].map(([,href])=>href);
+ for(const [,set] of html.matchAll(/\bsrcset="([^"<>]+)"/g))references.push(...set.split(',').map(item=>item.trim().split(/\s+/)[0]));
+ for(const href of references){
    if(!href.startsWith('/')&&!href.startsWith('#'))continue;
    const [pathname,anchor]=href.split('#');
    const dest=pathname||route;

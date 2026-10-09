@@ -1,4 +1,4 @@
-import {icon} from './templates.mjs';
+import {icon,previewPicture} from './templates.mjs';
 
 const sources = {
   bump: 'https://pubmed.ncbi.nlm.nih.gov/10655817/',
@@ -27,7 +27,7 @@ export function oldWivesTalesBody(){return `
   </div>
   <p class="small-copy">Free for personal, noncommercial events. No account or email required. Choose the matching paper size and print at actual size or 100% scale.</p>
 </div>
-<figure class="game-preview"><img src="/assets/games-old-wives-tales-preview.png" alt="Blank printable sheet for eight optional folklore guesses, with observation spaces and Boy, Girl or Surprise choices." width="540" height="764" loading="lazy"><figcaption>The optional record sheet contains no symptom-to-sex rules or medical questionnaire.</figcaption></figure>
+<figure class="game-preview">${previewPicture('old-wives-tales','Blank printable sheet for eight optional folklore guesses, with observation spaces and Boy, Girl or Surprise choices.')}<figcaption>The optional record sheet contains no symptom-to-sex rules or medical questionnaire.</figcaption></figure>
 
 <h2 id="common-tales">Eight common pregnancy tales, with their limits</h2>
 <p>Families may tell different versions of the same story. The table describes the idea rather than prescribing a boy/girl rule. None of these rows should be used to interpret a symptom or replace prenatal care.</p>

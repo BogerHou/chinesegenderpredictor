@@ -1,11 +1,11 @@
-import {icon} from './templates.mjs';
+import {icon,previewPicture} from './templates.mjs';
 
 function downloads(slug,label){
   return `<div class="download-actions"><a class="button secondary small" href="/downloads/gender-reveal-${slug}-a4.pdf" download>${icon('download-simple')}${label}: A4 PDF</a><a class="button secondary small" href="/downloads/gender-reveal-${slug}-letter.pdf" download>${icon('download-simple')}${label}: US Letter PDF</a></div>`;
 }
 
 function preview(slug,alt,caption){
-  return `<figure class="game-preview"><img src="/assets/games-${slug}-preview.png" alt="${alt}" width="540" height="764" loading="lazy"><figcaption>${caption}</figcaption></figure>`;
+  return `<figure class="game-preview">${previewPicture(slug,alt)}<figcaption>${caption}</figcaption></figure>`;
 }
 
 function gameIndex(){
@@ -16,7 +16,7 @@ function gameIndex(){
     ['bingo','Bingo','2-8 players or pairs'],
     ['word-scramble','Word scramble','2+ players or pairs']
   ];
-  return `<nav class="game-index" aria-label="Choose a party game">${games.map(([slug,label,players],index)=>`<a class="game-index-item" href="#${slug}"><img src="/assets/games-${slug}-preview.png" alt="" width="540" height="764" loading="lazy"><span class="game-index-label"><span class="game-index-number" aria-hidden="true">${String(index+1).padStart(2,'0')}</span>${label}</span><span class="game-index-meta">${players}</span></a>`).join('')}</nav>`;
+  return `<nav class="game-index" aria-label="Choose a party game">${games.map(([slug,label,players],index)=>`<a class="game-index-item" href="#${slug}">${previewPicture(slug,'',{sizes:'(max-width: 767px) calc((100vw - 58px) / 2), (max-width: 1023px) 140px, 160px'})}<span class="game-index-label"><span class="game-index-number" aria-hidden="true">${String(index+1).padStart(2,'0')}</span>${label}</span><span class="game-index-meta">${players}</span></a>`).join('')}</nav>`;
 }
 
 export function gamesBody(){return `

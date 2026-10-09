@@ -9,7 +9,7 @@ const indexable=Boolean(origin)&&process.env.VERCEL_ENV!=='preview';
 await fs.rm('dist',{recursive:true,force:true});
 await fs.mkdir('dist/assets',{recursive:true});
 await fs.cp('public','dist',{recursive:true});
-await fs.copyFile('src/styles.css','dist/assets/style.css');
+await build({entryPoints:['src/styles.css'],bundle:true,minify:true,outfile:'dist/assets/style.css',external:['/assets/*'],legalComments:'eof'});
 await build({entryPoints:['src/client.mjs'],bundle:true,minify:true,outdir:'dist/assets',splitting:true,format:'esm',target:'es2022',legalComments:'eof'});
 await fs.writeFile('dist/index.html',shell('/',home(),{origin,indexable}));
 for(const [route,render] of Object.entries(pages)){
