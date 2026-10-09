@@ -15,6 +15,7 @@
 | 首轮源码与视觉审查 | 重复的粗体标题／面板，资源缺少浏览入口，长文缺少章节导航；手机菜单Escape和结果焦点不完整 | 编辑式排版，首页资源书架、五种游戏真实缩略图，自动生成章节导航、最多三项相关指南；增强手机文字与44px菜单点击区 |
 | 第一版浏览器复核 | 手机Grid将结果排在表单前面，较矮笔记本按钮过深 | 恢复表单优先；压缩小屏幕首屏。390×844主要按钮bottom约738px，941×707为约692px，均在首屏内；长屏桌面保持舒展构图 |
 | 第二轮独立审查与第三版修正 | 原图和真实换算没有视觉联系；可选动画异常可中断结果；图表跳转未完成键盘焦点；标题播报缺少上下文 | 十二个月／年龄坐标仪表，结果完整可访问名称，图表区域焦点与选中位置说明；动画受减少动态效果控制且异常不会影响计算和重置 |
+| 发布后的性能复核与最终独立检查 | Google报告指出预览图片下载量偏大；Cloudflare自动注入统计脚本而被CSP拦截 | 两种尺寸纸卡WebP及月亮裁切，生产CSS压缩，srcset路径检查；Cloudflare当前域名RUM彻底禁用。最终审查确认fallback、尺寸与刻度计算正常，修复预览MIME和纸卡双旋转 |
 
 没有使用自动声音、滚动劫持、假进度条、虚构用户评价或虚构准确率。日期不放进链接，计算仍在浏览器本地完成。
 
@@ -33,8 +34,16 @@
 
 ## 发布与性能回执
 
-待本轮正式发布后记录GitHub CI、Vercel部署、正式站验收与新的PageSpeed报告。旧首页性能报告属于上一版，不能作为新版测量结果。
+- 设计与交互发布：[`1e142d5`](https://github.com/BogerHou/chinesegenderpredictor/commit/1e142d5c90b0980cd40964e16cf58bfa9120ffa5)。最终网页资产发布：[`c884cb3`](https://github.com/BogerHou/chinesegenderpredictor/commit/c884cb3ba8bc3f7dd1421e50add2324efc07e818)；[GitHub CI](https://github.com/BogerHou/chinesegenderpredictor/actions/runs/37871853054)成功，[Vercel生产部署](https://vercel.com/simonhou/chinesegenderpredictor/H6tsyQYAAKwvi4dX3H5fcPZBPPhb)状态success。
+- 正式域名 `verify:live` 20/20通过：11页、11网址sitemap、50项静态资源（含18份PDF）、真实404、安全头、HTTP／www跳转及旧Vercel项目域名404。一轮HTTP连接曾中断，完整重试后通过；不是已确认的跳转缺陷。
+- 14张新WebP、生产CSS及client.js共16项实际HTTP响应与本地构建逐字节一致；WebP全部返回image/webp。Chrome正式站完成示例、手机结果、五项游戏WebP目录及实际整套A4下载；下载文件与源码一致，测试副本移入废纸篓。
+- 新版第一份09:39报告：手机性能93、无障碍100、最佳实践92、SEO100，LCP2.7s。根据其图片诊断完成优化；未降低同源CSP。Cloudflare RUM由未配置状态明确切换为“RUM is currently disabled for this zone”，不改变安全日志、DNSSEC或SSL设置；用户测量范围保持Search Console。
+- [最终Google PageSpeed报告](https://pagespeed.web.dev/analysis/https-chinesegenderpredictor-net/3i75gj5021?form_factor=mobile)，2026-10-09 09:53:25：手机性能97、无障碍100、最佳实践100、SEO100，FCP1.361s、LCP1.961s、TBT0ms、CLS0、Speed Index3.834s；桌面四项均100，LCP0.302s、TBT0ms、CLS0.01。Lighthouse13.5／HeadlessChromium153，手机Moto G Power／低速4G模拟；外部报告的控制台错误已消失。
+- 首页圆盘与两张纸卡在本轮桌面1×实际选用WebP，总文件体积从280831减至27674字节（约90.1%）；高DPR可能选择更大的纸卡候选。6张完整纸卡WebP与PNG像素一致；缩略图均小于12KB。原始PNG、JPEG及18份PDF保持不变。
+- CrUX显示无真实用户数据。报告只证明此次首页实验室测量；不能据此声称全站现场INP或Core Web Vitals合格，也不能承诺排名或奖项结果。渲染阻塞提示仍有CSS，但性能及LCP达到本轮要求，未为追求分数改变稳定的首屏加载方式。
+
+本轮已按公开设计、内容、交互、响应式、无障碍和性能维度完成内部验收；没有未修复的已确认发布阻塞。作品是否达到实际获奖水平仍由正式评委决定。本轮未付费报名，也没有伪造奖项徽章或评委分数。
 
 ## 留存与清理
 
-源码、字体许可证、最终PDF及必要验收证据保留。调试截图和未使用的斜体字体移入本任务废纸篓；最后停止本轮预览服务并关闭任务标签页，保留用户无关页面。
+源码、字体许可证、最终PDF及必要验收证据保留于项目和私有 `.qa/quality/`。最终桌面、手机结果、游戏目录、Cloudflare关闭回执及构建／生产／资产核对记录保留。旧迭代截图、未使用的斜体字体和测试下载移入本任务废纸篓；最后停止本轮预览服务并关闭任务标签页，保留用户无关页面。

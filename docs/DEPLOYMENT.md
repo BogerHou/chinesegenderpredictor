@@ -1,8 +1,15 @@
 # 部署记录
 
-状态更新：2026-10-09（Asia/Shanghai）。第二轮11页内容版本已发布，GitHub CI、Vercel部署、Chrome浏览器及正式域名20项检查均已通过。此前08:00的10页生产版本及Cloudflare迁移已完成验收：橙云、严格HTTPS与新DNSSEC信任链均已启用，美国及德国外部探针确认代理HTTP 200；Google当时确认首页已收录、sitemap读取成功并发现10个网址。用户即时迁移要求已替代原晚间排期，原23:20自动任务已删除。
+状态更新：2026-10-09（Asia/Shanghai）。11页网站的设计与体验升级已发布，GitHub CI、Vercel部署、Chrome浏览器及正式域名20项检查均已通过。此前08:00的10页生产版本及Cloudflare迁移已完成验收：橙云、严格HTTPS与新DNSSEC信任链均已启用，美国及德国外部探针确认代理HTTP 200；Google当时确认首页已收录、sitemap读取成功并发现10个网址。用户即时迁移要求已替代原晚间排期，原23:20自动任务已删除。
 
-## 第二轮内容版本已发布
+## 品质升级已发布
+
+- 最终功能与资产发布[`c884cb3`](https://github.com/BogerHou/chinesegenderpredictor/commit/c884cb3ba8bc3f7dd1421e50add2324efc07e818)，[GitHub CI](https://github.com/BogerHou/chinesegenderpredictor/actions/runs/37871853054)成功，[Vercel生产部署](https://vercel.com/simonhou/chinesegenderpredictor/H6tsyQYAAKwvi4dX3H5fcPZBPPhb)状态success。后续文档回执提交不改变网站功能。
+- 正式配置19项测试、11页及595个内部路径／资源检查通过；正式域名20/20检查通过，50个静态资源可用，16个新版网页资产与本地构建逐字节一致。原有域名、路由、PDF和日期本地处理继续保留。
+- Cloudflare当前域名RUM已明确禁用，外部Google报告中此前被CSP拦截的统计脚本错误消失；没有放宽CSP，也没有修改DNSSEC或SSL。仅使用Search Console观察搜索表现。
+- [09:53新版PageSpeed](https://pagespeed.web.dev/analysis/https-chinesegenderpredictor-net/3i75gj5021?form_factor=mobile)：手机性能97，其余三项100，LCP约2.0s；桌面四项100。无CrUX现场数据。完整迭代与验收见 [品质记录](DESIGN-QUALITY-2026-10-09.md)。
+
+## 第二轮内容版本已发布（历史）
 
 - 本地 `SITE_URL=https://chinesegenderpredictor.net VERCEL_ENV=production npm run build:verified` 已通过：19项测试、11页、518个内部路径／资源检查。
 - 当前源码包含增强年龄对照、准确性／方法问题、2027主工具入口、五种可打印游戏及新增民俗指南。18份PDF共46页，其中4份年度PDF保持上一版原文件不变。
