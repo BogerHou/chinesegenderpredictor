@@ -2,7 +2,7 @@
 
 核验日期：2026-10-08。定位：面向英语用户的 Chinese Gender Predictor 民俗娱乐工具。工程约束：静态站，esbuild + lunar，部署至 Vercel。
 
-本文保留首发8页的历史策略，不代表当前完成状态。2026-10-09的关键词估算见 [机会方案](SEO-OPPORTUNITIES-2026-10-09.md)，当前11页内容版本及部署进度见 [实施路线](IMPLEMENTATION-ROADMAP.md)。Search Console所有权与首页收录已验证；用户选择只用Search Console，原文中的工具事件统计、GA4及广告设想尚未实施。
+本文保留首发8页的历史策略，不代表当前完成状态。2026-10-09的关键词估算见 [机会方案](SEO-OPPORTUNITIES-2026-10-09.md)，当前11页内容版本及部署进度见 [实施路线](IMPLEMENTATION-ROADMAP.md)。Search Console所有权与首页收录已验证；2026-10-11 按用户新要求完成 GA4 基础访问统计接入及实际收集验收，仅在访客主动同意后启用。原文中的计算器事件及广告设想尚未实施，详情见 [GA4 接入记录](GA4-SETUP-2026-10-11.md)。
 
 ## 目标与依据
 

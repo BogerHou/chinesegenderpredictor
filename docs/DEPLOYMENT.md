@@ -1,5 +1,13 @@
 # 部署记录
 
+## 2026-10-11 GA4 已上线
+
+功能提交 [`1ff48cc`](https://github.com/BogerHou/chinesegenderpredictor/commit/1ff48cc3dd38a8b862c1abb579401c76c1371cb8) 已发布：[GitHub CI](https://github.com/BogerHou/chinesegenderpredictor/actions/runs/38107221809) 成功，[Vercel](https://vercel.com/simonhou/chinesegenderpredictor/53ukq6vk4iUyYfqYKPFRTq3piUYZ) 状态 success。正式域名 20/20 检查通过，50 项静态资源可用，11 页 HTML 及 CSS／client.js 共 13 项响应与本地构建一致；默认 Vercel 项目域名仍 404。
+
+Search Console 保留，新增 GA4 属性 558418294、衡量 ID G-5SPR4SKKXX，仅在访客主动同意后统计基础访问。Chrome 实测标签 HTTP 200、收集 HTTP 204，实时报告已有首页浏览记录；URL 合成的日期／结果／活动标记未进入 Google 请求，计算器输入没有交互事件。撤回后清除 GA Cookie 并停止请求。广告、增强型衡量功能及计算器／下载事件未启用。配置、范围、本机永久放行规则和回执见 [GA4 接入记录](GA4-SETUP-2026-10-11.md)。
+
+以下为此前发布时的历史状态；其中仅使用 Search Console 的测量范围已由本次用户授权更新。
+
 ## 2026-10-09 FAQ 整合发布
 
 [`18fc2ca`](https://github.com/BogerHou/chinesegenderpredictor/commit/18fc2caee527fd86d817bf396b3f447562c5a14c) 已发布：[GitHub CI](https://github.com/BogerHou/chinesegenderpredictor/actions/runs/37907737023) 成功，[Vercel](https://vercel.com/simonhou/chinesegenderpredictor/88pEzScRyRxs5H7YTzpXZ9fiZanZ) 状态 success。首页 9 个 FAQ、方法／年龄／年度／准确性补充回答和手机 FAQ 单列修正在正式域名生效。20/20 生产检查通过，50 项静态资源正常；6 个页面和 CSS 与本地构建逐字节一致。默认 Vercel 项目域名仍 404，基础设施与 Search Console 测量范围保持既有配置。
