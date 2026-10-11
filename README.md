@@ -26,6 +26,7 @@ The chart is folklore for entertainment. It is not a medical prediction and has 
 - A sourced old wives' tales guide that separates entertainment from scientific evidence.
 - Responsive layouts, a warm light theme, self-hosted fonts and images.
 - Date calculations happen in the browser. Input dates are not sent to a server or included in share links.
+- Optional Google Analytics loads only after consent. Cookie settings let visitors decline or withdraw; calculator dates, results, submissions and PDF downloads are not tracked.
 
 ## Development
 
@@ -44,7 +45,7 @@ Import this repository into Vercel. The checked-in `vercel.json` configures the 
 
 Cloudflare provides authoritative DNS and proxying for the root domain and www. Full (strict) HTTPS and DNSSEC were verified on October 9, 2026; Spaceship remains the domain registrar. The default `.vercel.app` project domain is removed, and www redirects to the root domain.
 
-The next content revision is implemented and passes the local verified build: 19 tests, 11 pages and 518 internal paths/assets. Its production deployment and browser acceptance are tracked separately in the [QA record](docs/QA.md).
+The verified build covers 37 tests, 11 pages and 618 internal paths/assets. Production deployment and browser acceptance are tracked separately in the [QA record](docs/QA.md).
 
 [中文开发与部署说明](docs/DEVELOPMENT.md) · [QA record](docs/QA.md)
 

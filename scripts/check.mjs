@@ -2,8 +2,11 @@ import {readFile,access} from 'node:fs/promises';
 import path from 'node:path';
 import assert from 'node:assert/strict';
 import {routes} from '../src/templates.mjs';
+import {GA_MEASUREMENT_ID} from '../src/analytics-config.mjs';
 const origin=process.env.SITE_URL?new URL(process.env.SITE_URL).origin:'';
 const indexable=Boolean(origin)&&process.env.VERCEL_ENV!=='preview';
+const gaMeasurementId=process.env.GA_MEASUREMENT_ID??GA_MEASUREMENT_ID;
+const analyticsEnabled=indexable&&origin==='https://chinesegenderpredictor.net'&&Boolean(gaMeasurementId);
 assert(process.env.VERCEL_ENV!=='production'||origin,'Production deployment requires SITE_URL; refusing to publish a noindex site.');
 const titles=new Set(),descriptions=new Set();let checked=0;
 for(const [route] of routes){
@@ -16,6 +19,9 @@ for(const [route] of routes){
  const canonical=html.match(/<link rel="canonical" href="([^"]+)"/)?.[1];
  assert.equal(canonical,origin?new URL(route,origin).href:undefined,`${route}: canonical matches the configured public origin`);
  assert(html.includes(`name="robots" content="${indexable?'index,follow':'noindex,nofollow'}"`),`${route}: correct indexing policy`);
+ assert.equal(html.includes('data-ga-measurement-id='),analyticsEnabled,`${route}: analytics stream is present only in canonical production builds`);
+ assert.equal(html.includes('id="analytics-preferences"'),analyticsEnabled,`${route}: optional analytics controls match build policy`);
+ assert(!html.includes('src="https://www.googletagmanager.com/'),`${route}: Google tag is never loaded before visitor consent`);
  const ids=[...html.matchAll(/\bid="([^"]+)"/g)].map(match=>match[1]);
  assert.equal(new Set(ids).size,ids.length,`${route}: unique element IDs`);
  assert(!/[—–]/.test(html),`${route}: copy uses plain punctuation`);

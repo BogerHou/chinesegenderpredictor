@@ -1,5 +1,7 @@
+import {initAnalytics} from './analytics.mjs';
 import {loadCalendar} from './calculator-loader.mjs';
 import {dateFromParts,splitDate} from './date-parts.mjs';
+initAnalytics();
 const menu=document.querySelector('.menu-toggle');menu?.addEventListener('click',()=>{const open=menu.getAttribute('aria-expanded')==='true';menu.setAttribute('aria-expanded',String(!open));menu.setAttribute('aria-label',open?'Open navigation':'Close navigation');document.querySelector('#mobile-nav').hidden=open;});
 document.addEventListener('keydown',event=>{if(event.key==='Escape'&&menu?.getAttribute('aria-expanded')==='true'){menu.setAttribute('aria-expanded','false');document.querySelector('#mobile-nav').hidden=true;menu.setAttribute('aria-label','Open navigation');menu.focus();}});
 document.querySelectorAll('[data-print]').forEach(el=>el.addEventListener('click',()=>window.print()));

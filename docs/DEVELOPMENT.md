@@ -61,11 +61,12 @@ npm run verify:live
 - `src/chart.mjs`：固定版本的传统矩阵；不是统一官方原本。
 - `src/client.mjs`：交互、字段错误定位；农历模块只在计算器页面按需加载。
 - `src/date-parts.mjs`：英文 Month／Day／Year 控件的输入整理，拼成计算器使用的日期；实际历日继续由 `calendar.mjs` 严格校验。
+- `src/analytics.mjs`：仅正式域名的基础GA4访问统计，同意前不加载Google代码；日期、表单和下载不作为事件采集。`src/analytics-config.mjs`保存公开数据流ID。
 - `src/calculator-loader.mjs`：模块失败或 15 秒超时的恢复处理；保持按钮禁用并显示重载入口。
 - `scripts/build.mjs`：预渲染11页、打包、robots/sitemap/canonical。
 - `scripts/check.mjs`：元数据、链接、唯一 ID、索引策略和无脚本表单保护检查。
 - `scripts/verify-live.mjs`：生产 HTTP、跳转、资源和 PDF 检查。
-- `tests/calendar.test.mjs`、`tests/calculator-loader.test.mjs`、`tests/date-parts.test.mjs`：香港天文台日期夹具、输入边界、周岁／虚岁差异、闰日生日、加载恢复和英文日期分段输入；当前共23项测试。
+- `tests/calendar.test.mjs`、`tests/calculator-loader.test.mjs`、`tests/date-parts.test.mjs`：香港天文台日期夹具、输入边界、周岁／虚岁差异、闰日生日、加载恢复和英文日期分段输入；上述计算器测试共23项；`tests/analytics.test.mjs`另有14项同意、撤回、存储失败、URL清理及环境隔离测试，共37项。
 
 虚岁 = 受孕农历年 − 出生农历年 + 1。年龄页同时显示目标日期的公历周岁；2月29日生日在非闰年以3月1日为周岁增加日，页面明确说明此展示约定。预产期模式减266天得到估算受孕日。闰月使用同编号月份并明确提示，此为本站约定。图表支持虚岁18至45，不对超范围年龄做钳制。完整MIT和字体许可保存在 `THIRD-PARTY-NOTICES.md`，同时随网站发布文本副本。
 
@@ -75,14 +76,14 @@ npm run verify:live
 
 工具优先，Cormorant Garamond 标题与 Manrope 正文均自托管；暖奶油白底色、玫瑰粉主色，淡蓝和淡粉区分图表及预测结果。十二个月刻度与实际农历年龄形成首页的视觉识别，刻度不是月相。圆角按面板、输入控件与图标分别设置。全站固定明亮主题，不跟随系统暗色偏好。当前设计参数：变化7、动效4、密度4；仅交互反馈，无自动播放动画，尊重减少动态效果设置。公开评审维度和本轮检查见 [品质基准](AWARDS-BENCHMARK.md)及[品质验收](DESIGN-QUALITY-2026-10-09.md)。
 
-原始月亮静物图为本项目生成，内容为奶油白婴儿房背景、粉色圆球与浅蓝装饰。网页使用适配尺寸的 WebP，保留原 JPEG 和 PNG fallback；纸卡完整预览采用无损 WebP，目录和首页使用小尺寸版本。所有字体、图标、图片本地托管。CSS 在生产构建时压缩。无GA4/AdSense或第三方追踪脚本，后续接入前更新隐私文本；事件不得携带日期或出生相关信息。
+原始月亮静物图为本项目生成，内容为奶油白婴儿房背景、粉色圆球与浅蓝装饰。网页使用适配尺寸的 WebP，保留原 JPEG 和 PNG fallback；纸卡完整预览采用无损 WebP，目录和首页使用小尺寸版本。所有字体、图标、图片本地托管。CSS 在生产构建时压缩。2026-10-11按用户新要求接入GA4，访客接受后才加载；仍无AdSense。后台关闭Enhanced measurement，来源URL去除查询与片段，不添加日期、结果、表单或PDF下载事件。事件不得携带日期或出生相关信息。
 
 ## 发布与运营配置
 
 1. 确认域名并设置 `SITE_URL`，核验正式页面可索引。
 2. 将项目连接实际 Vercel 账号；最终发布后用真实站点检查安全头及404。
 3. 使用真实运营者身份与联系渠道完善 About/Privacy，不填虚构医生或审核身份。
-4. Search Console 域名所有权已于2026-10-09验证；08:00 的 HTTPS `/sitemap.xml` 报告读取成功，发现当时的10个网址。新版本正式构建包含11个网址，新指南的 Google 收录不能由构建或 sitemap 推断。用户选择先只用 Search Console，未接入 GA4 或行为统计；广告账号尚未配置。
+4. Search Console 域名所有权已于2026-10-09验证；08:00 的 HTTPS `/sitemap.xml` 报告读取成功，发现当时的10个网址。新版本正式构建包含11个网址，新指南的 Google 收录不能由构建或 sitemap 推断。原先只用 Search Console 的选择已被2026-10-11接入GA4的新要求替代；GSC继续观察搜索词，GA4接入基础访问统计。广告账号尚未配置。
 5. 如接广告，先设计不遮挡计算器的广告位并更新实际数据政策。
 
 浏览器功能与静态输出验收记录见 [QA](QA.md)。
