@@ -3,6 +3,7 @@ import path from 'node:path';
 import assert from 'node:assert/strict';
 import {routes} from '../src/templates.mjs';
 import {GA_MEASUREMENT_ID} from '../src/analytics-config.mjs';
+import {loadConfig as loadIndexNowConfig} from './indexnow.mjs';
 const origin=process.env.SITE_URL?new URL(process.env.SITE_URL).origin:'';
 const indexable=Boolean(origin)&&process.env.VERCEL_ENV!=='preview';
 const gaMeasurementId=process.env.GA_MEASUREMENT_ID??GA_MEASUREMENT_ID;
@@ -52,6 +53,9 @@ for(const [route] of routes){
  }
 }
 const robots=await readFile('dist/robots.txt','utf8');
+const indexNow=await loadIndexNowConfig('indexnow.config.json');
+assert.equal(indexNow.host,'chinesegenderpredictor.net','IndexNow uses the production host');
+assert.equal((await readFile(`dist${new URL(indexNow.keyLocation).pathname}`,'utf8')).trim(),indexNow.key,'IndexNow verification file is included in the static build');
 if(indexable){
  assert(robots.includes('Allow: /')&&!robots.includes('Disallow: /'), 'Production robots allows crawling.');
  assert(robots.includes(`Sitemap: ${origin}/sitemap.xml`),'Production robots declares the public sitemap.');

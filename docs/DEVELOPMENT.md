@@ -85,6 +85,7 @@ npm run verify:live
 3. 使用真实运营者身份与联系渠道完善 About/Privacy，不填虚构医生或审核身份。
 4. Search Console 域名所有权已于2026-10-09验证；08:00 的 HTTPS `/sitemap.xml` 报告读取成功，发现当时的10个网址。新版本正式构建包含11个网址，新指南的 Google 收录不能由构建或 sitemap 推断。原先只用 Search Console 的选择已被2026-10-11接入GA4的新要求替代；GSC继续观察搜索词，GA4接入基础访问统计。广告账号尚未配置。
 5. 如接广告，先设计不遮挡计算器的广告位并更新实际数据政策。
+6. 正式发布并核验后，运行 `npm run indexnow -- --check` 核对线上静态所有权文件。用 `npm run indexnow -- /changed-page/` 预览本次真正新增或修改的规范 URL，再用 `--submit` 发送；删除或迁移旧 URL 用 `--submit --removed /old-page/`。可用 `--file changed-urls.txt` 提供逐行列表。默认 dry-run 不联网，不从 Preview 构建或历史 Sitemap 全量提交。200 只表示已收到，202 表示密钥验证待完成，均不代表收录。配置与静态验证文件随源码保留；运营回执不抄录验证 key。
 
 浏览器功能与静态输出验收记录见 [QA](QA.md)。
 

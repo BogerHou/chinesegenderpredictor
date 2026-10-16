@@ -47,6 +47,8 @@ Cloudflare provides authoritative DNS and proxying for the root domain and www. 
 
 The verified build covers 37 tests, 11 pages and 618 internal paths/assets. Production deployment and browser acceptance are tracked separately in the [QA record](docs/QA.md).
 
+After production verification, run `npm run indexnow -- --check` to verify the static ownership file. Preview only the canonical URLs added or changed in that release with `npm run indexnow -- /changed-page/`; send them with `npm run indexnow -- --submit /changed-page/`. Use `--submit --removed /old-page/` for removed or moved URLs, or `--file changed-urls.txt` for one URL per line. The default is a dry run without network requests. Submission checks the production host, key, public response, robots policy and canonical URL. It does not run during builds, previews or browser visits. Do not repeatedly submit the unchanged sitemap. HTTP 200 means received; 202 means key validation pending; neither proves indexing. `indexnow.config.json` references a static verification file, not an account credential. See the [IndexNow protocol](https://www.indexnow.org/documentation).
+
 [中文开发与部署说明](docs/DEVELOPMENT.md) · [QA record](docs/QA.md)
 
 ## Sources and corrections
