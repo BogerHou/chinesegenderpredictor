@@ -9,6 +9,8 @@ import {
   lunarDate,
   parseDate,
   predict,
+  babyZodiac,
+  conceptionWindows,
 } from '../src/calendar.mjs';
 import { CHART, CHART_VERSION } from '../src/chart.mjs';
 
@@ -241,4 +243,64 @@ test('2027 month ranges match HKO and cover all 365 days exactly once', () => {
   for (let day = yearStart; day <= yearEnd; day += dayMs) {
     assert.ok(covered.has(day), `missing ${new Date(day).toISOString().slice(0, 10)}`);
   }
+});
+
+test('baby zodiac calculates element and animal from estimated birth date', () => {
+  const z2025 = babyZodiac('2025-06-01');
+  assert.equal(z2025.animal, 'Snake');
+  assert.equal(z2025.element, 'Wood');
+  assert.equal(z2025.name, 'Wood Snake');
+
+  const z2026 = babyZodiac('2026-06-01');
+  assert.equal(z2026.animal, 'Horse');
+  assert.equal(z2026.element, 'Fire');
+  assert.equal(z2026.name, 'Fire Horse');
+
+  const z2027 = babyZodiac('2027-06-01');
+  assert.equal(z2027.animal, 'Goat');
+  assert.equal(z2027.element, 'Fire');
+  assert.equal(z2027.name, 'Fire Goat');
+
+  const z2028 = babyZodiac('2028-06-01');
+  assert.equal(z2028.animal, 'Monkey');
+  assert.equal(z2028.element, 'Earth');
+  assert.equal(z2028.name, 'Earth Monkey');
+
+  const p = predict('1995-06-15', '2026-05-01');
+  assert.ok(p.babyZodiac);
+  assert.ok(p.babyZodiac.name);
+  assert.ok(p.babyZodiac.traits);
+});
+
+test('conception windows compute monthly predictions across the target year', () => {
+  const windows2026 = conceptionWindows('1995-06-15', 2026);
+  assert.ok(windows2026.length >= 12);
+  for (const win of windows2026) {
+    assert.ok(['Boy', 'Girl'].includes(win.prediction));
+    assert.ok(win.start && win.end);
+    assert.ok(win.month >= 1 && win.month <= 12);
+  }
+});
+
+test('2028 calendar months include leap month 5 and cover 366 days', () => {
+  const months = calendarMonths(2028);
+  const leap5 = months.find(m => m.leap);
+  assert.ok(leap5);
+  assert.equal(leap5.month, 5);
+  assert.equal(leap5.start, '2028-06-23');
+  assert.equal(leap5.end, '2028-07-21');
+
+  const dayMs = 86_400_000;
+  const yearStart = Date.UTC(2028, 0, 1);
+  const yearEnd = Date.UTC(2028, 11, 31);
+  const covered = new Set();
+  for (const record of months) {
+    const start = Date.parse(`${record.start}T00:00:00Z`);
+    const end = Date.parse(`${record.end}T00:00:00Z`);
+    for (let day = start; day <= end; day += dayMs) {
+      assert.equal(covered.has(day), false);
+      covered.add(day);
+    }
+  }
+  assert.equal(covered.size, 366);
 });

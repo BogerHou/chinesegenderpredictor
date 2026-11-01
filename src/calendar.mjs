@@ -29,6 +29,42 @@ export function lunarAge(birth,target) {
   const gregorianAge=targetDate.y-birthDate.y-Number(beforeBirthday);
   return {age:at.year-born.year+1,gregorianAge,born,at};
 }
+const ZODIAC_ANIMALS = ['Rat','Ox','Tiger','Rabbit','Dragon','Snake','Horse','Goat','Monkey','Rooster','Dog','Pig'];
+const ELEMENTS = ['Wood','Fire','Earth','Metal','Water'];
+const ZODIAC_TRAITS = {
+  Rat: 'Quick-witted, charming and resourceful.',
+  Ox: 'Patient, dependable and determined.',
+  Tiger: 'Brave, confident and magnetic.',
+  Rabbit: 'Gentle, intuitive and peaceful.',
+  Dragon: 'Energetic, charismatic and ambitious.',
+  Snake: 'Wise, intuitive and deep-thinking.',
+  Horse: 'Spirited, warm-hearted and enthusiastic.',
+  Goat: 'Creative, gentle and empathetic.',
+  Monkey: 'Clever, innovative and lively.',
+  Rooster: 'Observant, honest and punctual.',
+  Dog: 'Loyal, sincere and protective.',
+  Pig: 'Generous, kind-hearted and joyful.'
+};
+const ZODIAC_EMOJIS = {
+  Rat: '🐀', Ox: '🐂', Tiger: '🐅', Rabbit: '🐇',
+  Dragon: '🐉', Snake: '🐍', Horse: '🐎', Goat: '🐐',
+  Monkey: '🐒', Rooster: '🐓', Dog: '🐕', Pig: '🐖'
+};
+
+export function babyZodiac(estimatedBirthDate) {
+  const l = lunarDate(estimatedBirthDate);
+  const animal = ZODIAC_ANIMALS[((l.year - 4) % 12 + 12) % 12];
+  const element = ELEMENTS[Math.floor((((l.year - 4) % 10 + 10) % 10) / 2)];
+  return {
+    year: l.year,
+    animal,
+    element,
+    name: `${element} ${animal}`,
+    emoji: ZODIAC_EMOJIS[animal] || '✨',
+    traits: ZODIAC_TRAITS[animal] || ''
+  };
+}
+
 export function predict(birth,input,mode='conception') {
   if(!['conception','due'].includes(mode)) throw new Error('Choose conception date or due date.');
   parseInput(birth,'birth');parseInput(input,'target');
@@ -42,7 +78,10 @@ export function predict(birth,input,mode='conception') {
     const date=addDays(conception,days);
     return lunarDate(date<'1900-01-01'?'1900-01-01':date>'2099-12-31'?'2099-12-31':date);
   });
-  return {age,born,lunar:at,conception,estimated:mode==='due',prediction:code==='B'?'Boy':'Girl',nearBoundary:nearby.some(l=>l.year!==at.year||l.month!==at.month||l.leap!==at.leap)};
+  const estimatedDue = mode==='due'?input:addDays(conception,266);
+  const safeDue = estimatedDue<'1900-01-01'?'1900-01-01':estimatedDue>'2099-12-31'?'2099-12-31':estimatedDue;
+  const zodiac = babyZodiac(safeDue);
+  return {age,born,lunar:at,conception,estimated:mode==='due',prediction:code==='B'?'Boy':'Girl',nearBoundary:nearby.some(l=>l.year!==at.year||l.month!==at.month||l.leap!==at.leap),babyZodiac:zodiac};
 }
 export function calendarMonths(year) {
   const records=[];
@@ -54,4 +93,23 @@ export function calendarMonths(year) {
     date=addDays(date,1);
   }
   return records;
+}
+export function conceptionWindows(birth, year = 2026) {
+  const months = calendarMonths(year);
+  return months.map(m => {
+    try {
+      const { age } = lunarAge(birth, m.start);
+      const code = CHART[age]?.[m.month - 1];
+      return {
+        month: m.month,
+        leap: m.leap,
+        start: m.start,
+        end: m.end,
+        age,
+        prediction: code === 'B' ? 'Boy' : code === 'G' ? 'Girl' : null
+      };
+    } catch {
+      return null;
+    }
+  }).filter(Boolean);
 }

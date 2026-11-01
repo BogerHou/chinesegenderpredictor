@@ -53,7 +53,7 @@ DATA = json.loads(subprocess.check_output([
     "import {CHART,CHART_VERSION} from './src/chart.mjs'; "
     "import {calendarMonths} from './src/calendar.mjs'; "
     "console.log(JSON.stringify({chart:CHART,version:CHART_VERSION,"
-    "years:{2026:calendarMonths(2026),2027:calendarMonths(2027)}}));"
+    "years:{2026:calendarMonths(2026),2027:calendarMonths(2027),2028:calendarMonths(2028)}}));"
 ], cwd=ROOT, text=True))
 
 
@@ -165,8 +165,9 @@ def reference_page(c, size, year, format_name):
         text(c, str(record["year"]), columns[1], y + 5, 8.4, align="center")
         text(c, str(record["month"]) + (" (leap)" if record["leap"] else ""), columns[2], y + 5, 8.4, True, align="right")
     y = top - head_h - len(records) * row_h - 13
-    y = paragraph(c, f"Only dates within {year} are listed. The first and last lunar months continue outside this calendar year. "
-                  "There is no leap lunar month in the date ranges shown.", left, y, width, 8, 11)
+    has_leap = any(r["leap"] for r in records)
+    leap_text = "Includes leap lunar month 5." if has_leap else "There is no leap lunar month in the date ranges shown."
+    y = paragraph(c, f"Only dates within {year} are listed. The first and last lunar months continue outside this calendar year. {leap_text}", left, y, width, 8, 11)
     y -= 18
     text(c, "Before you choose a row", left, y, 11, True)
     y = paragraph(c, "<b>Lunar age:</b> conception lunar year minus birth lunar year plus one. It changes at Lunar New Year, "
@@ -533,7 +534,7 @@ def main():
     for format_name, size in (("A4", A4), ("Letter", letter)):
         slug = format_name.lower()
         if "calendars" in groups:
-            for year in (2026, 2027):
+            for year in (2026, 2027, 2028):
                 path = OUT / f"chinese-gender-calendar-{year}-{slug}.pdf"
                 c = new_pdf(path, size, f"Chinese Gender Calendar {year} - {format_name}")
                 c.setAuthor("Chinese Gender Predictor")
