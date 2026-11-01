@@ -53,7 +53,7 @@ DATA = json.loads(subprocess.check_output([
     "import {CHART,CHART_VERSION} from './src/chart.mjs'; "
     "import {calendarMonths} from './src/calendar.mjs'; "
     "console.log(JSON.stringify({chart:CHART,version:CHART_VERSION,"
-    "years:{2026:calendarMonths(2026),2027:calendarMonths(2027),2028:calendarMonths(2028)}}));"
+    "years:{2026:calendarMonths(2026),2027:calendarMonths(2027)}}));"
 ], cwd=ROOT, text=True))
 
 
@@ -534,7 +534,7 @@ def main():
     for format_name, size in (("A4", A4), ("Letter", letter)):
         slug = format_name.lower()
         if "calendars" in groups:
-            for year in (2026, 2027, 2028):
+            for year in (2026, 2027):
                 path = OUT / f"chinese-gender-calendar-{year}-{slug}.pdf"
                 c = new_pdf(path, size, f"Chinese Gender Calendar {year} - {format_name}")
                 c.setAuthor("Chinese Gender Predictor")

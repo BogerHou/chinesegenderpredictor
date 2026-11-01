@@ -2,9 +2,9 @@ export const ANALYTICS_ORIGIN='https://chinesegenderpredictor.net';
 export const ANALYTICS_CHOICE_KEY='cgp_analytics_choice';
 const routes=new Set([
   '/', '/lunar-age-calculator/', '/chinese-gender-calendar-2026/',
-  '/chinese-gender-calendar-2027/', '/chinese-gender-calendar-2028/',
-  '/gender-reveal-games/', '/old-wives-tales-gender-prediction/',
-  '/how-it-works/', '/accuracy/', '/about/', '/privacy/', '/terms/'
+  '/chinese-gender-calendar-2027/', '/gender-reveal-games/',
+  '/old-wives-tales-gender-prediction/', '/how-it-works/', '/accuracy/',
+  '/about/', '/privacy/', '/terms/'
 ]);
 const controllers=new WeakMap();
 const denied={analytics_storage:'denied',ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied'};
