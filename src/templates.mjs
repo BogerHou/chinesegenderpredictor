@@ -10,12 +10,12 @@ export function previewPicture(slug,alt,{sizes='(max-width: 767px) calc(100vw - 
 }
 export const routes = [
   ['/', 'Chinese Gender Predictor | Free Chinese Gender Calendar', 'Try a free Chinese gender predictor with automatic lunar age and month conversion. Explore the traditional chart and see how your result is calculated.'],
-  ['/lunar-age-calculator/', 'Lunar Age Calculator | Chinese Age by Date', 'Calculate your traditional Chinese lunar age on any date. See the lunar birth year, target year and the formula behind your result.'],
+  ['/lunar-age-calculator/', 'Lunar Age Calculator | Chinese Age & Conception Formula', 'Calculate your traditional Chinese lunar age on any date. See the lunar birth year, target year and the formula behind your result.'],
   ['/chinese-gender-calendar-2027/', 'Chinese Gender Calendar 2027 | Chart & Free PDF', 'Use the 2027 Chinese gender chart with lunar month dates, age rules and free A4 or Letter PDFs. Includes due-date examples across 2026 and 2027.'],
   ['/chinese-gender-calendar-2026/', 'Chinese Gender Calendar 2026 | Chart & Free PDF', 'Explore the 2026 Chinese gender calendar, convert conception dates to lunar months, and download the complete chart and date reference as a free PDF.'],
   ['/gender-reveal-games/', '5 Free Printable Gender Reveal Games | PDF Kit', 'Download five gender reveal games: prediction cards, voting, a name race, eight Bingo cards and a word scramble. Free A4 and Letter PDFs with answers.'],
   ['/old-wives-tales-gender-prediction/', 'Old Wives’ Tales Gender Prediction | Guide & Free Game', 'Explore eight pregnancy folklore guesses, what research says, and a free printable old wives’ tales gender reveal game. Download A4 or Letter PDFs.'],
-  ['/how-it-works/', 'How the Chinese Gender Predictor Works', 'Understand lunar age, conception month, leap months and the traditional chart used by this Chinese gender predictor. See a worked example.'],
+  ['/how-it-works/', 'How the Chinese Gender Predictor Works | Step-by-Step Chart Guide', 'Understand lunar age, conception month, leap months and the traditional chart used by this Chinese gender predictor. See a worked example.'],
   ['/accuracy/', 'Is the Chinese Gender Predictor Accurate? The Evidence', 'Is the Chinese gender predictor accurate? Read what studies found, why charts can give different answers, and how to learn your baby’s sex.'],
   ['/about/', 'About Chinese Gender Predictor', 'Learn about Chinese Gender Predictor, explore our free calendars and games, and see the sources behind the traditional chart.'],
   ['/privacy/', 'Privacy | Chinese Gender Predictor', 'How this website handles dates and calculations. Inputs stay in your browser and are not included in URLs or analytics.'],
@@ -38,7 +38,20 @@ export function shell(path,body,{origin='',indexable=false,title,description,gaM
     structured.push({'@context':'https://schema.org','@type':'BreadcrumbList',itemListElement:[{'@type':'ListItem',position:1,name:'Home',...(origin?{item:origin+'/'}:{})},{'@type':'ListItem',position:2,name:route[1].split('|')[0].trim(),...(canonical?{item:canonical}:{})}]});
   }
   if(isArticle){
-    structured.push({'@context':'https://schema.org','@type':'Article',headline:route[1].split('|')[0].trim(),description:route[2],...(canonical?{url:canonical}:{}),author:{'@type':'Person',name:'BogerHou',url:'https://github.com/BogerHou'},publisher:{'@type':'Organization',name:'Chinese Gender Predictor',...(origin?{url:origin+'/'}:{})}});
+    structured.push({
+      '@context':'https://schema.org',
+      '@type':'Article',
+      headline:route[1].split('|')[0].trim(),
+      description:route[2],
+      ...(canonical?{url:canonical}:{}),
+      author:{'@type':'Person',name:'BogerHou',url:'https://github.com/BogerHou'},
+      publisher:{'@type':'Organization',name:'Chinese Gender Predictor',...(origin?{url:origin+'/'}:{})},
+      citation:[
+        'https://pubmed.ncbi.nlm.nih.gov/20618730/',
+        'https://doi.org/10.1111/j.1365-3016.2010.01129.x',
+        'https://www.actualgyn.com/pdf/en_2023_281.pdf'
+      ]
+    });
   }
   if(path==='/old-wives-tales-gender-prediction/'){
     structured.push({'@context':'https://schema.org','@type':'FAQPage',mainEntity:[
@@ -84,7 +97,7 @@ export const faqs = [
   ['How accurate is the Chinese gender calendar?','Studies have found that the calendar is no more reliable than chance. Correctly converting your dates helps you read the chart, but it does not make the guess a reliable prediction.',['/accuracy/#calendar-accuracy','Read the accuracy studies.']],
   ['How do I find my lunar age for the chart?','Enter your regular date of birth and your estimated conception date above. Traditional lunar age starts at one at birth and increases at each Chinese New Year. It is not always your regular age plus one.',['/lunar-age-calculator/#my-lunar-age','Calculate your lunar age separately.']],
   ['How do I find my lunar month of conception?','It is the Chinese-calendar month containing your estimated conception date. Lunar months do not line up with January through December. Enter your usual calendar date above, and the calculator finds the lunar month for you.',['/how-it-works/#lunar-month-of-conception','See examples of lunar conception months.']],
-  ['What if I only know my due date?','Choose Due date above. We estimate conception as 266 days before that date. The chart uses this estimated conception date, not the month your baby is due. A small difference in the estimate can sometimes change the lunar month used.',['/how-it-works/#conception-date-or-due-date','Learn which date to use.']],
+  ['What if I only know my due date?','Choose Due date above. We estimate conception as 266 days before that date. The chart uses this estimated conception date, not the month your baby is due. For IVF or frozen embryo transfers, you can also determine your exact conception date from your transfer day.',['/how-it-works/#ivf-conception-date','Learn how to calculate your conception date.']],
   ['Does the Chinese gender calendar change every year?','The chart used here stays the same. The dates of the lunar months change from year to year, and your lunar age can change too. Our yearly calendars help you find the lunar month for a specific conception date.',['/chinese-gender-calendar-2027/#year-changes','Explore the yearly calendar dates.']],
   ['Why do different calculators give different results?','Websites may use different chart versions, ways of counting age, conception estimates or leap-month rules. Your result shows the lunar age and month used here, so you can find the matching cell on our chart.',['/how-it-works/#chart-source','See the chart and rules used here.']],
   ['Are my dates saved or shared?','No. Your dates and result stay on your device. We do not receive or save them. If you copy your result, the shared text includes no dates.']

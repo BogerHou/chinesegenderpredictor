@@ -52,6 +52,18 @@ export function oldWivesTalesBody(){return `
 <p>A survey of 4,320 pregnancies found somewhat more first-trimester nausea and vomiting on average with female fetuses. That does not mean nausea can tell you an individual baby’s sex. The 2021 paper, published online in 2020, asked people to recall their experiences rather than measuring symptoms as they happened. ${cite('nausea','Read the original study abstract')}.</p>
 <p><strong>An average difference between groups does not give an answer for one person.</strong> Having nausea, or having none, does not establish that someone is carrying a girl or boy. Questions about symptoms belong with the person’s maternity care team.</p>
 
+<h2 id="baking-soda-gender-test">The baking soda gender test: does it work?</h2>
+<p>The baking soda gender test is one of the most widely searched at-home folklore tests. It involves adding a tablespoon of baking soda (sodium bicarbonate) to a small cup of morning urine. According to folklore, if the mixture fizzes and bubbles like soda, it predicts a boy; if it remains flat with no reaction, it predicts a girl.</p>
+<p><strong>The scientific reality:</strong> the fizz is an ordinary chemical reaction between an acid and a base. Baking soda releases carbon dioxide gas when it encounters acidic liquid. Urine acidity (pH) fluctuates throughout the day based on hydration levels, diet (such as citrus or high-protein meals), morning sickness, dehydration and urinary tract health. It has no biological connection to the sex chromosomes (XX or XY) of your baby. There is no clinical evidence that baking soda can predict fetal sex.</p>
+
+<h2 id="nub-and-ramzi-theories">What about the nub and Ramzi ultrasound theories?</h2>
+<p>Unlike purely folklore tests, the <strong>nub theory</strong> and <strong>Ramzi theory</strong> attempt to use early medical ultrasound images for gender guesses.</p>
+<ul>
+  <li><strong>The Ramzi method:</strong> claims that the location of the placenta (left or right side of the uterus) at 6 to 8 weeks indicates fetal sex. However, researchers and professional obstetric bodies have found no reliable association between early placental attachment sites and baby sex.</li>
+  <li><strong>The nub theory:</strong> looks at the angle of the genital tubercle (the “nub”) on an 11-to-13-week scan relative to the spine. While genital anatomy does differentiate around this stage, early ultrasound predictions are easily skewed by fetal position, spine curvature and imaging resolution.</li>
+</ul>
+<p>A mid-pregnancy 18-to-22-week anatomy scan or non-invasive prenatal testing (NIPT cell-free DNA) remain the standard medical methods to evaluate fetal development and sex.</p>
+
 <h2 id="tradition-and-evidence">What if all your guesses agree?</h2>
 <p>Even if every tale points to the same answer, it is still a collection of guesses. A dependable test needs research showing how often it is right and wrong. Matching stories alone cannot tell you a baby’s sex.</p>
 <p>The <a href="/">Chinese gender predictor</a> is another traditional guess. It matches the mother’s lunar age with the lunar month of conception, but research has not found it more reliable than chance. Read <a href="/how-it-works/">how to use the Chinese gender calendar</a> if you want to try it.</p>
