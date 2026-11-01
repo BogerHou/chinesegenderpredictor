@@ -54,7 +54,7 @@ function aside(path,headings){
   const related=(relatedGuides[path]||['/how-it-works/','/accuracy/','/gender-reveal-games/']).filter(href=>href!==path).slice(0,3);
   return `<aside class="article-aside"><nav class="guide-toc" aria-label="On this page"><h2 class="guide-toc-title">On this page</h2><ol class="guide-toc-list">${headings.map(({id,label},index)=>`<li><a href="#${esc(id)}"><span class="guide-toc-number" aria-hidden="true">${String(index+1).padStart(2,'0')}</span><span>${esc(label)}</span></a></li>`).join('')}</ol></nav><div class="guide-related"><h2>Read next</h2>${related.map(href=>`<a href="${href}">${guideLinks[href]}</a>`).join('')}</div><a class="button primary" href="/">Open predictor</a></aside>`;
 }
-function article(title,description,content,path,updated){const guide=guideContent(content);return `<section class="container article-section"><div class="breadcrumb"><a href="/">Home</a> / ${esc(title)}</div><header class="article-header"><h1>${title}</h1><p>${description}</p>${editorial(updated)}</header><div class="article-layout">${aside(path,guide.headings)}<article class="prose">${guide.html}</article></div></section>`;}
+function article(title,description,content,path,updated){const guide=guideContent(content);return `<section class="container article-section"><div class="breadcrumb"><a href="/">Home</a> / ${esc(title)}</div><header class="article-header"><h1>${esc(title)}</h1><p>${esc(description)}</p>${editorial(updated)}</header><div class="article-layout">${aside(path,guide.headings)}<article class="prose">${guide.html}</article></div></section>`;}
 function ageComparison(){
   const birth='2000-06-01';
   const dates=['2026-02-16','2026-02-17','2026-06-01'];
